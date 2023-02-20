@@ -1,7 +1,6 @@
 require('dotenv').config();
 const mongoose = require('mongoose')
-
-const url = process.env.USER_URI
+    const url = process.env.USER_URI
 
 mongoose.set('strictQuery', false)
         .connect(url)
@@ -30,5 +29,6 @@ userSchema.set('toJSON', {
         delete returnedObject.__v
     }
 })
+
 
 module.exports = mongoose.model('User', userSchema);

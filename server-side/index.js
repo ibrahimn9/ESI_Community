@@ -10,7 +10,7 @@ const bodyparser = require('body-parser').urlencoded({extended: true})
 
 app.use(express.json());
 app.use(cors());
-app.use(bodyparser);
+app.use(bodyparser);   
 
 
 morgan.token("post", (req, res) => {
@@ -102,11 +102,13 @@ app.get("/api/user", (req, res) => {
       .catch((error) => next(error));
   });
 
-  app.get('/api/verify-email', async(req,res) => {
+  app.post('/api/verify-email', async(req,res) => {
     const { email } = req.query;
-    const isValid = await validator.verifyEmail(email);
-
-    return res.json({valid: isValid});
+    const validation = await validator.verifyEmail(email);
+    return res.json({
+      valid: validation.isvalid,
+      isexist:validation.isexist
+    });
   })
 
   app.post('/api/verify-password', (req,res) => {
