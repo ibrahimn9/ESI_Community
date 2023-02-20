@@ -1,0 +1,371 @@
+:root {
+  --color-white: #fff5f5;
+  --color-light: #fbf6f6;
+  --color-gray: #b4afaf;
+  --color-dark-gray: #242424;
+  --color-primary: #205bf1;
+  --color-secondary: #d12f58;
+  --color-dark: #1e1f24;
+  --color-dark-blue: #011947;
+  --color-dark-shadow: #121212;
+}
+
+body {
+  font-family: "Urbanist", sans-serif;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  text-decoration: none;
+  background: var(--color-dark);
+  list-style: none;
+}
+
+.home {
+  background-image: url(./assets/splash.png);
+  background-repeat: no-repeat;
+  background-size: 80%;
+  background-position: 130% -1%;
+}
+
+/*NavBar Style*/
+.home_navbar-link {
+  color: white;
+  font-weight: 500;
+  text-transform: capitalize;
+  text-decoration: none;
+  letter-spacing: 0.1rem;
+  margin-right: 26px;
+  font-size: 18px;
+}
+
+.home_navbar-link:hover {
+  opacity: 0.8;
+}
+
+.home_navbar-links__btn {
+  color: white;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.primary-btn {
+  color: white;
+  background: var(--color-primary);
+  transition: 0.3s;
+}
+
+.text-btn {
+  color: white;
+  background: transparent;
+}
+
+.primary-btn:hover {
+  opacity: 0.8;
+}
+
+.text-btn:hover {
+  opacity: 0.8;
+}
+
+.nav-btn {
+  font-size: 18px;
+  padding: 8px 22px;
+  border-radius: 5px;
+}
+
+.btn {
+  border: none;
+  cursor: pointer;
+  font-family: "Urbanist", sans-serif;
+}
+
+.home_navbar-links--toggled {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  margin-top: 5px;
+  padding: 16px;
+  background: var(--color-dark-gray);
+  border-radius: 5px;
+  box-shadow: 8px 8px 10px var(--color-dark-shadow);
+  z-index: 10;
+  transition: 0.3s;
+}
+
+.link--toggled {
+  margin-bottom: 15px;
+}
+
+.home_content {
+  background: url(./assets/splash2.png);
+  background-position: 0% 100%;
+  background-repeat: no-repeat;
+  background-size: 40%;
+}
+
+.footer {
+  background-image: url(./assets/splash3.png);
+  background-size: 10%;
+  background-repeat: no-repeat;
+  background-position: 100% 0%;
+}
+
+/*----------------Medium and large devices-----------------*/
+@media screen and (min-width: 900px) {
+  .home_navbar-links__btn {
+    display: none;
+  }
+
+  .home_navbar-links--toggled {
+    display: none;
+  }
+
+  .about-box {
+    background-size: 23%;
+  }
+
+  .ratio {
+    height: 160px;
+  }
+}
+
+/*Header Style*/
+
+.email-bar-input {
+  border: none;
+  outline: none;
+  width: 70%;
+  font-size: 16px;
+  font-family: "Urbanist";
+}
+
+.header-btn {
+  width: 30%;
+  padding: 8px 14px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 28px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+/*------------------large devices-------------------*/
+@media screen and (min-width: 1200px) {
+  .home_header__img {
+    flex-basis: 60%;
+  }
+
+  .home_header__img img {
+    position: relative;
+  }
+
+  .home_header__img img:nth-child(1) {
+    right: -100px;
+    top: 80px;
+  }
+
+  .home_header__img img:nth-child(2) {
+    right: -200px;
+    top: 120px;
+  }
+
+  .home_header__img img:nth-child(3) {
+    right: 85px;
+    top: -55px;
+  }
+
+  .about-box {
+    height: 480px;
+  }
+}
+
+/*------------------medium devices-----------------*/
+@media screen and (max-width: 1200px) and (min-width: 900px) {
+  .home {
+    background-position: 130% 0%;
+  }
+
+  .email-bar {
+    left: 50%;
+    transform: translate(-50%, 0);
+  }
+
+  .home_header__img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .home_header__img img {
+    position: relative;
+    margin-right: 20px;
+  }
+
+  .home_header__img img:nth-child(1) {
+    top: 0;
+  }
+
+  .home_header__img img:nth-child(2) {
+    top: 60px;
+  }
+
+  .home_header__img img:nth-child(3) {
+    top: -40px;
+  }
+
+  .about-box {
+    height: 350px;
+  }
+}
+
+/*---------------small devices---------------*/
+@media screen and (max-width: 900px) {
+  .home {
+    background-position: 50% 10%;
+    background-size: 140%;
+  }
+  .home_header__img {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .home_header__img img {
+    margin-bottom: 10px;
+  }
+
+  .header-primary-btn--xs {
+    border-radius: 5px;
+    border: 2px solid var(--color-primary);
+    font-size: 28px;
+    font-weight: 500;
+    padding: 4px 18px;
+    margin-right: 10px;
+  }
+
+  .header-secondary-btn--xs {
+    border-radius: 5px;
+    border: 2px solid var(--color-primary);
+    background: var(--color-dark-gray);
+    color: white;
+    font-size: 28px;
+    font-weight: 500;
+    padding: 4px 18px;
+    transition: 0.3s;
+  }
+
+  .header-secondary-btn--xs:hover {
+    opacity: 0.8;
+  }
+
+  .content-img {
+    width: 300px;
+  }
+
+  .ratio {
+    margin-top: 60px;
+  }
+
+  .info-btn {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .about-box {
+    height: 600px;
+  }
+
+  .home_content {
+    background-size: 80%;
+  }
+
+  .footer {
+    background-size: 30%;
+  }
+}
+
+/*Content Style */
+.content-box {
+  margin-top: 10px;
+  border-left: 2px solid var(--color-primary);
+  padding-left: 40px;
+  margin-bottom: 80px;
+  transition: 0.3s;
+}
+
+.content-box:hover {
+  border-left: 2px solid var(--color-gray);
+}
+
+.content-primary-btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  margin-top: 40px;
+  font-size: 22px;
+  width: auto;
+}
+
+.content-primary-btn svg {
+  margin-left: 14px;
+}
+
+.about-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #6867673b;
+  margin-top: 250px;
+  background-image: url(./assets/splash1.png);
+  background-repeat: no-repeat;
+  background-position: 100% 0%;
+}
+
+.github-link {
+  cursor: pointer;
+  transition: 0.1s ease-in-out;
+}
+
+.github-link:hover {
+  transform: translateY(-10%);
+  opacity: 0.9;
+}
+
+/*--------------Animation----------------*/
+
+  .home_header__right-box {
+    animation: left-to-right 1s ease;
+    position: relative;
+  }
+
+  @keyframes left-to-right {
+    0% {
+      left: -15%;
+      opacity: 0;
+    }
+    100% {
+      left: 0;
+      opacity: 1;
+    }
+  }
+
+  .home_header__img {
+    animation: right-to-left 1s ease;
+    position: relative;
+  }
+
+  @keyframes right-to-left {
+    0% {
+      right: -15%;
+      opacity: 0;
+    }
+    100% {
+      right: 0;
+      opacity: 1;
+    }
+  }
+  
