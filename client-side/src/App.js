@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Home, Auth, Contact, Docs, Security} from './pages'
-import { Signin, Signup, EmailVerification } from "./containers/Auth";
+import { Signin, Signup, EmailConfirmation } from "./containers/Auth";
 
 
 const App = () => (
@@ -13,7 +13,7 @@ const App = () => (
       <Route path='/security' element={<Security />} />
       <Route path='/auth/signup' element={<Signup />} />
       <Route path='/auth/signin' element={<Signin />} />
-      <Route path='auth/email_verification' element={<EmailVerification />} />
+      <Route path='/auth/email_conformation' element={<EmailConfirmation />} />
     </Routes>
   </BrowserRouter>
 );

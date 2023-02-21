@@ -1,14 +1,18 @@
 import { useState } from "react";
 import user from "../../services/user";
 import createValidationMessage from "../../constants/createValidationMessage";
+import { Link } from "react-router-dom";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const [isUsernameValid, setIsUsernameValid] = useState(false);
   const [errors, setErrors] = useState([]);
-  const [password, setPassword] = useState("");
   const [displayPassword, setDisplayPassword] = useState(false);
+  const [displayUsername, setDisplayUsername] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -19,9 +23,8 @@ const Signup = () => {
     setEmail(email);
 
     try {
-      const response = await user.verifyEmail(email);
-      const { data } = response;
-      setIsEmailValid(data.valid);
+      const { data } = await user.verifyEmail(email);
+      setIsEmailValid(data.valid && !data.exist);
     } catch (error) {
       console.log(error);
     }
@@ -30,10 +33,25 @@ const Signup = () => {
   const handlePasswordChange = async (event) => {
     setPassword(event.target.value);
     try {
-      const { data } = await user.verifyPassword({password,});
-      const arrayOfErrors = createValidationMessage.passwordValidationMessage(data.errors);
-      console.log(arrayOfErrors)
+      const { data } = await user.verifyPassword({ password });
+      const arrayOfErrors = createValidationMessage.passwordValidationMessage(
+        data.errors
+      );
       setIsPasswordValid(data.valid);
+      setErrors(arrayOfErrors);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleUsernameChange = async (event) => {
+    setUsername(event.target.value);
+    try {
+      const { data } = await user.verifyUserName(username);
+      const arrayOfErrors = createValidationMessage.usernameValidationMessage(
+        data.errors
+      );
+      setIsUsernameValid(data.valid);
       setErrors(arrayOfErrors);
     } catch (error) {
       console.log(error);
@@ -53,7 +71,7 @@ const Signup = () => {
           continue
         </button>
         {isEmailValid && <div>Email is valid!</div>}
-        {!isEmailValid && <div>Email is not valid.</div>}
+        {!isEmailValid && <div>Email is not valid or already taken.</div>}
 
         {displayPassword && (
           <>
@@ -61,21 +79,37 @@ const Signup = () => {
             <input
               name="password"
               type="text"
+              value={password}
               onChange={handlePasswordChange}
             />
-            <button>continue</button>
+            <button
+              disabled={!isPasswordValid}
+              onClick={() => setDisplayUsername(true)}
+            >
+              continue
+            </button>
             {isPasswordValid && <div>password is valid!</div>}
-            {!isPasswordValid && errors.map((error) => (<div key={error}>{error}</div>))}
+            {!isPasswordValid &&
+              errors.map((error) => <div key={error}>{error}</div>)}
           </>
         )}
-        {/* 
-        {validatePwd && (
+
+        {displayUsername && (
           <>
             <h2>Enter your fullname</h2>
-            <input name="fullname" type="text" />
-            <button type="submit">create account</button>
+            <input
+              type="text"
+              value={username}
+              onChange={handleUsernameChange}
+            />
+            <Link to="/auth/email_conformation">
+              <button disabled={!isUsernameValid}>create account</button>
+            </Link>
+            {isUsernameValid && <div>username is valid!</div>}
+            {!isUsernameValid &&
+              errors?.map((error) => <div key={error}>{error}</div>)}
           </>
-        )} */}
+        )}
       </form>
     </div>
   );

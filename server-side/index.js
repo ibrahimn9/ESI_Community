@@ -102,24 +102,36 @@ app.get("/api/user", (req, res) => {
       .catch((error) => next(error));
   });
 
-  app.post('/api/verify-email', async(req,res) => {
+  app.post('/api/verify-email', async(req, res) => {
     const { email } = req.query;
-    const validation = await validator.verifyEmail(email);
+    const { valid, exist } = await validator.verifyEmail(email);
     return res.json({
-      valid: validation.isvalid,
-      isexist:validation.isexist
+      valid,
+      exist,
     });
   })
 
-  app.post('/api/verify-password', (req,res) => {
-    const body = req.body;
-    const arrayOfErrors = validator.verifyPassword(body.password);
+  app.post('/api/verify-password', (req, res) => {
+    const { password } = req.body;
+    const arrayOfErrors = validator.verifyPassword(password);
     const isValid = arrayOfErrors.length === 0;
     return res.json({
       valid: isValid,
       errors: arrayOfErrors,
     });
   })
+
+  app.post('/api/verify-username', async(req, res) => {
+    const { username } = req.query;
+    const  arrayOfErrors = await validator.verifyUsername(username);
+    const isValid = arrayOfErrors.length === 0;
+    return res.json({
+      valid: isValid,
+      errors: arrayOfErrors,
+    });
+  })
+
+  
 
   const PORT = "3001";
   

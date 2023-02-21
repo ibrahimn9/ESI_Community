@@ -71,7 +71,7 @@ const Header = () => (
         }}
         className="home_header__img"
       >
-        <img src={images.publication} alt="e" />
+        <img src={images.publication} alt="e" style={{width: '240px', borderRadius: '5px'}} />
         <img src={images.upgradepub} alt="" />
         <img src={images.dbpub} alt="  " />
       </Box>

@@ -1,9 +1,9 @@
 import React from 'react'
 
-const EmailVerification = () => {
+const EmailConfirmation = () => {
   return (
     <div>EmailVerification</div>
   )
 }
 
-export default EmailVerification
+export default EmailConfirmation
