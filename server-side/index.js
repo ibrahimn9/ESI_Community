@@ -8,9 +8,10 @@ const bodyparser = require('body-parser').urlencoded({extended: true})
 
 
 
+
 app.use(express.json());
 app.use(cors());
-app.use(bodyparser);   
+app.use(bodyparser);
 
 
 morgan.token("post", (req, res) => {
@@ -59,7 +60,7 @@ app.get("/api/user", (req, res) => {
 
   app.post("/api/user", (req, res, next) => {
     const body = req.body;
-  
+
     if (!body.name || !body.pwd || !body.email) {
       return res.status(400).json({ error: "name or email or pwd missing" });
     } else {
@@ -83,7 +84,7 @@ app.get("/api/user", (req, res) => {
 
   app.put("/api/user/:id", (req, res, next) => {
     const body = req.body;
-  
+
     const user = {
         name: body.name,
         email: body.email,
@@ -131,10 +132,25 @@ app.get("/api/user", (req, res) => {
     });
   })
 
-  
+let confirmationCode;
+app.post('/api/confirm_email', async (req, res) => {
+  const { email } = req.body;
+  confirmationCode = await validator.confirmCode(email);
+  return res.status(200)
+})
+
+app.post('/api/confirm_code', async (req, res) => {
+  const { code } = req.body;
+  const isValid = confirmationCode === code;
+  return res.json({
+    valid: isValid,
+  })
+})
+
+
 
   const PORT = "3001";
-  
+
   app.listen(PORT, () => {
     console.log(`server is running on ${PORT}`);
   });
