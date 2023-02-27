@@ -46,7 +46,7 @@ const NavBar = () => {
         )}
       </Box>
       <Box sx={{ display: "flex", flexWrap: "nowrap", alignItems: "center" }}>
-        <Link to="/auth/signin">
+        <Link to="/auth/login">
           <button className="text-btn nav-btn btn">Sign in</button>
         </Link>
         <Link to="/auth/signup">

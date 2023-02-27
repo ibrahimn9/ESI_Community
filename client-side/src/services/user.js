@@ -17,9 +17,25 @@ const verifyPassword = async(bodyReq) => {
 const verifyUserName = async(username) => {
     return await axios.post(`${baseUrl}/verify-username?username=${username}`)
 }
+
+const sendEmail = async(bodyReq) => {
+    return await axios.post(`${baseUrl}/confirm_email`, bodyReq)
+}
+const confirmEmail = async(bodyReq) => {
+    return await axios.post(`${baseUrl}/confirm_code`, bodyReq)
+}
+
+const createNewUser = async (user) => {
+    return await axios.post(`${baseUrl}/user`, user)
+}
+
+
 export default {
     getAll,
     verifyEmail,
     verifyPassword,
     verifyUserName,
+    sendEmail,
+    confirmEmail,
+    createNewUser,
 }

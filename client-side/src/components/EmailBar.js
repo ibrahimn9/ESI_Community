@@ -1,13 +1,27 @@
 import { useState } from "react";
 import { Paper } from "@mui/material";
 import { TbSend } from "react-icons/tb";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { createUser } from "../reducers/userReducer";
 
 const EmailBar = () => {
   const [email, setEmail] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    //verify email function
+  };
+
+  const handleEmailChange = (e) => {
+    const email = e.target.value;
+    setEmail(email);
+  };
+
+  const handleButtonClick = () => {
+    dispatch(createUser({ email }));
+    navigate("/auth/signup");
   };
 
   return (
@@ -15,24 +29,28 @@ const EmailBar = () => {
       component="form"
       onSubmit={handleSubmit}
       sx={{
-        borderRadius: '3px',
-        position: 'relative',
+        borderRadius: "3px",
+        position: "relative",
         pl: 2,
-        width: {md: '70%', lg: "85%"},
-        mt: {md : 8, lg: 4,},
-        display: {xs: 'none' ,md:"flex"},
+        width: { md: "70%", lg: "85%" },
+        mt: { md: 8, lg: 4 },
+        display: { xs: "none", md: "flex" },
         justifyContent: "space-between",
         boxShadow: "0px 4px 5px #121212",
       }}
-      className='email-bar'
+      className="email-bar"
     >
       <input
         className="email-bar-input"
-        placeHolder="Email adress"
+        placeholder="Email adress"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <button type="submit" className="primary-btn header-btn btn">
+
+      <button
+        className="primary-btn header-btn btn"
+        onClick={handleButtonClick}
+      >
         Sign up <TbSend />
       </button>
     </Paper>

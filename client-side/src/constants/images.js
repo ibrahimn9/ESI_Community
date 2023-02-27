@@ -16,6 +16,7 @@ import telescope from "../assets/telescope.png";
 import twitter from "../assets/twitterbrand.png";
 import upgrade from "../assets/upgrade.png";
 import logo from "../assets/logo.png"
+import ellipse from "../assets/ellipse.svg"
 
 export default {
   esialg,
@@ -36,4 +37,5 @@ export default {
   twitter,
   upgrade,
   logo,
+  ellipse,
 };

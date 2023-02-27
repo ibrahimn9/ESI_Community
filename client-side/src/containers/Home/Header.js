@@ -72,8 +72,8 @@ const Header = () => (
         className="home_header__img"
       >
         <img src={images.publication} alt="e" style={{width: '240px', borderRadius: '5px'}} />
-        <img src={images.upgradepub} alt="" />
-        <img src={images.dbpub} alt="  " />
+        <img src={images.upgradepub} alt=""  style={{width: '245px', borderRadius: '5px'}}/>
+        <img src={images.dbpub} alt="" style={{width: '240px', borderRadius: '5px'}}/>
       </Box>
     </Stack>
     <Box
@@ -85,19 +85,7 @@ const Header = () => (
         mt: { xs: 15, lg: 1 },
       }}
     >
-      <Divider sx={{ background: "white" }} />
-      <Stack
-        direction="row"
-        sx={{
-          alignItems: "center",
-          justifyContent: "space-around",
-          mt: 2,
-        }}
-      >
-        <img src={images.esisba} alt="" />
-        <img src={images.esialg} alt="" />
-        <img src={images.estin} alt="" />
-      </Stack>
+      
     </Box>
   </>
 );

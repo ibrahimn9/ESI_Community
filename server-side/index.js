@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+const bcrypt = require("bcrypt");
 const app = express();
 const validator = require('./validator');
 const mongoose = require("mongoose");
@@ -58,27 +59,26 @@ app.get("/api/user", (req, res) => {
   });
 
 
-  app.post("/api/user", (req, res, next) => {
+  app.post("/api/user", async (req, res) => {
     const body = req.body;
 
-    if (!body.name || !body.pwd || !body.email) {
+    if (!body.name || !body.password || !body.email || !body.class) {
       return res.status(400).json({ error: "name or email or pwd missing" });
-    } else {
+    } 
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(body.password, saltRounds);
 
-      const user = new User({
-        name: body.name,
-        email: body.email,
-        pwd: body.pwd,
-        niv: body.niv,
-      });
+    const user = new User({
+      name: body.name,
+      email: body.email,
+      passwordHash,
+      class: body.class,
+      pic: body.pic,
+    });
+  
+    const savedUser = await user.save();
+    res.json(savedUser);
 
-      user
-        .save()
-        .then((savedUser) => {
-          res.json(savedUser);
-        })
-        .catch((error) => next(error));
-    }
   })
 
 
@@ -141,7 +141,8 @@ app.post('/api/confirm_email', async (req, res) => {
 
 app.post('/api/confirm_code', async (req, res) => {
   const { code } = req.body;
-  const isValid = confirmationCode === code;
+  const codeNumber = parseInt(code);
+  const isValid = confirmationCode === codeNumber;
   return res.json({
     valid: isValid,
   })

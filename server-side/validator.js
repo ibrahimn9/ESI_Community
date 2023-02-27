@@ -1,15 +1,15 @@
 const emailValidator = require("email-validator");
 const passwordValidator = require("password-validator");
-const nodemailer = require("nodemailer")
+const nodemailer = require("nodemailer");
 const User = require("./models/user");
 
 const verifyEmail = async (email) => {
   const isValid = emailValidator.validate(email);
   const domain = email.split("@")[1];
-  const isEmailSchoolDomin = domain === "esi-sba.dz";
+  // const isEmailSchoolDomin = domain === "esi-sba.dz";
   const useremail = await User.findOne({ email });
   const IsExist = useremail ? true : false;
-  return { valid: isValid && isEmailSchoolDomin, exist: IsExist };
+  return { valid: isValid , exist: IsExist };
 };
 
 const verifyPassword = (password) => {
@@ -26,42 +26,41 @@ const verifyUsername = (username) => {
 
 const confirmCode = async (email) => {
   let confirmationCode = Math.floor(Math.random() * 900000) + 100000;
-  const username = email.substring(email.indexOf('.') + 1, email.indexOf('@'));
+  const username = email.substring(email.indexOf(".") + 1, email.indexOf("@"));
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: "zeddoun.lokmane@gmail.com",
-      pass: "xcagcrluskoiodph"
-    }
-  })
+      user: "esicommuinity@gmail.com",
+      pass: "hdaxbfsnpklkyvms",
+    },
+  });
 
   const mailOption = {
-    from: "zeddoun.lokmane@gmail.com",
+    from: "esicommuinity@gmail.com",
     to: email,
-    subject: "Email Confirmation for ESI COMMUNITY",
-    html: `<p>Dear ${username}</p><p>Thank you for signing up for ESI COMMUNITY Before you can start using our service, we need to confirm your email address. </p>
-<p>Please enter the following confirmation code in the appropriate field on our ESI COMMUNIY</p>
-<p><b>${confirmationCode}</b></p>
-<p>If you did not sign up for ESI COMMNITY please disregard this email</p>
-<p>Thank you for choosing ESI COMMNITY!</p>
-<p>Best regards,</p>`
-
-  }
+    subject: "Email Confirmation for ESI Community",
+    html: `<p>Dear ${username.toUpperCase()}</p>
+           <p>Thank you for signing up for ESI COMMUNITY Before you can start using our service, we need to confirm your email address. </p>
+           <p>Please enter the following confirmation code in the appropriate field on our ESI COMMUNIY</p>
+           <h3>${confirmationCode}</h3>
+           <p>If you did not sign up for ESI Community please disregard this email</p>
+           <p>Thank you for choosing ESI Community!</p>
+           <p>Best regards,</p>`,
+  };
 
   transporter.sendMail(mailOption, (err, info) => {
     if (err) {
-      console.log(err)
+      console.log(err);
+    } else {
+      console.log("res" + info.response);
     }
-    else {
-      console.log('res' + info.response)
-    }
-  })
+  });
   return confirmationCode;
-}
+};
 
 module.exports = {
   verifyEmail,
   verifyPassword,
   verifyUsername,
-  confirmCode
+  confirmCode,
 };

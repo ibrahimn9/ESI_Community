@@ -167,7 +167,7 @@ const Content = () => (
           Earn more points and get an{" "}
           <span style={{ color: "#205BF1" }}>upgrade</span>
         </Typography>
-        <Link to="/docs">
+        <Link to="/docs" style={{ textDecoration: 'none' }}>
           <button className="primary-btn content-primary-btn info-btn btn">
             Read more information <FaChevronRight />
           </button>
@@ -211,7 +211,7 @@ const Content = () => (
           have a comment or suggestion to share, we look forward to hearing from
           you. Feel free to contact us.
         </Typography>
-        <Link to="/contact">
+        <Link to="/contact" style={{ textDecoration: 'none' }}>
           <button className="primary-btn content-primary-btn btn">
             Contact Us <FaChevronRight />
           </button>
@@ -263,7 +263,7 @@ const Content = () => (
           career or just want to improve your skills, ESI Community is your
           home. Join us and enjoy the experience.
         </Typography>
-        <Link to="/authentication">
+        <Link to="/auth/signup">
           <button className="primary-btn content-primary-btn btn" style={{ marginBottom: '100px'}}>
             Sign up <FaChevronRight />
           </button>
