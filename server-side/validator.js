@@ -6,11 +6,12 @@ const User = require("./models/user");
 const verifyEmail = async (email) => {
   const isValid = emailValidator.validate(email);
   const domain = email.split("@")[1];
-  // const isEmailSchoolDomin = domain === "esi-sba.dz";
-  const useremail = await User.findOne({ email });
-  const IsExist = useremail ? true : false;
-  return { valid: isValid , exist: IsExist };
+  const isEmailSchoolDomin = domain === "esi-sba.dz";
+  const userEmail = await User.findOne({ email });
+  const IsExist = userEmail ? true : false;
+  return { valid: isValid && isEmailSchoolDomin , exist: IsExist };
 };
+
 
 const verifyPassword = (password) => {
   const passwordSchema = new passwordValidator();

@@ -1,20 +1,37 @@
 import { useState } from "react";
 import { Stack, Box, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { images } from "../../constants";
+import user from "../../services/user";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [msg, setMsg] = useState("");
+  const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+  }
+
+  const handleLogin = async () => {
+    const { data } = await user.login({ email, password })
+    if(data.token) {
+      window.localStorage.setItem("loggedUser", JSON.stringify(data))
+      setMsg("");
+      const id = data.id;
+      navigate(`/user_home/${id}`);
+    } 
+    if(data.error) {
+      setMsg(data.error);
+    }
   };
 
   const handleEmailChange = (e) => {
     const email = e.target.value;
     setEmail(email);
   };
+
 
   const handlePasswordChange = (e) => {
     const password = e.target.value;
@@ -48,22 +65,23 @@ const Login = () => {
           width: "100%",
         }}
       >
-        <form className="auth-form login-form" onSubmit={handleLogin}>
+        <form className="auth-form login-form" onSubmit={handleSubmit}>
           <label>Email address</label>
           <input type="email" value={email} onChange={handleEmailChange} />
           <Stack direction="row" sx={{ justifyContent: "space-between" }}>
             <label>Password</label>
             <label className="auth-link">Forgot password?</label>
           </Stack>
-          <input type="password" onChange={handlePasswordChange} />
+          <input type="password" value={password} onChange={handlePasswordChange} />
           <button
-            type="submit"
+            onClick={handleLogin}
             className="login-btn btn"
           >
             Sign in
           </button>
         </form>
       </Box>
+          {msg && <div className="auth-msg">{msg}</div>}
       <Box
         sx={{
           mt: "20px",

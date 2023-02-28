@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Home, Auth, Contact, Docs, Security} from './pages'
+import { Home, Auth, Contact, Docs, Security, UserHome} from './pages'
 import { Login, Signup, EmailConfirmation, SubmitUser } from "./containers/Auth";
 
 
@@ -15,6 +15,7 @@ const App = () => (
       <Route path='/auth/login' element={<Login />} />
       <Route path='/auth/email_confirmation' element={<EmailConfirmation />} />
       <Route path='/auth/complete_submition' element={<SubmitUser />} />
+      <Route path='/user_home/:id' element={<UserHome />} />
     </Routes>
   </BrowserRouter>
 );

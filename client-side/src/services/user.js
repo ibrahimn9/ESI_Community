@@ -2,8 +2,12 @@ import axios from "axios";
 
 const baseUrl = "http://localhost:3001/api";
 
-const getAll = () =>  {
-    return axios.get(baseUrl)
+const getAll = async () =>  {
+    return await axios.get(baseUrl)
+}
+
+const getOne = async (id) => {
+    return await axios.get(`${baseUrl}/user/${id}`)
 }
 
 const verifyEmail = async(email) => {
@@ -29,6 +33,22 @@ const createNewUser = async (user) => {
     return await axios.post(`${baseUrl}/user`, user)
 }
 
+const login = async (bodyReq) => {
+    return await axios.post(`${baseUrl}/login`, bodyReq);
+}
+
+
+
+
+
+const sendToken = async (token) => {
+    return await axios.post(`${baseUrl}/verify-token`, null, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        },
+    })
+}
+
 
 export default {
     getAll,
@@ -38,4 +58,8 @@ export default {
     sendEmail,
     confirmEmail,
     createNewUser,
+    login,
+    getOne,
+    sendToken,
+
 }
