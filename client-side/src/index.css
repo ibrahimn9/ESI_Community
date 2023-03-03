@@ -354,6 +354,53 @@ a {
   color: var(--color-success) !important;
 }
 
+.header-title {
+  color: var(--color-white);
+  font-size: 52px;
+  margin-top: 60px;
+  margin-bottom: 10px;
+}
+
+.header-sub-title {
+  color: var(--color-gray);
+  font-weight: 400;
+  font-size: 22px;
+  margin: 0;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.contact-form input[type='email'] {
+  outline: none;
+  padding: 12px;
+  border: none;
+  border-radius: 2px;
+  width: 400px;
+  font-size: 16px;
+  font-family: 'Urbanist';
+  margin-bottom: 50px;
+
+}
+
+.contact-form input[type='email']::placeholder {
+  font-weight: 400;
+}
+
+.contact-form textarea {
+  border: none;
+  border-radius: 2px;
+  padding: 12px;
+  width: 400px;
+  height: 200px;
+
+}
+
+
+
 
 
 

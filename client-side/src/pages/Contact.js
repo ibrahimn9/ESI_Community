@@ -1,8 +1,17 @@
-import React from 'react'
+import { Box } from '@mui/material'
+import { NavBar, Footer } from '../containers/Home'
+import Header from '../containers/Contact/Header'
 
 const Contact = () => {
   return (
-    <div>Contact</div>
+    <Box sx={{
+      width: '100%',
+      height: 'auto',
+    }}>
+       <NavBar />
+       <Header />
+       <Footer />
+    </Box>
   )
 }
 

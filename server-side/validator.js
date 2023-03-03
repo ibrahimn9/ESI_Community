@@ -9,7 +9,7 @@ const verifyEmail = async (email) => {
   const isEmailSchoolDomin = domain === "esi-sba.dz";
   const userEmail = await User.findOne({ email });
   const IsExist = userEmail ? true : false;
-  return { valid: isValid && isEmailSchoolDomin , exist: IsExist };
+  return { valid: isValid && isEmailSchoolDomin  , exist: IsExist };
 };
 
 
@@ -31,13 +31,13 @@ const confirmCode = async (email) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: "esicommuinity@gmail.com",
-      pass: "hdaxbfsnpklkyvms",
+      user: "esicommunity23@gmail.com",
+      pass: "xcesyhotluaghkct",
     },
   });
 
   const mailOption = {
-    from: "esicommuinity@gmail.com",
+    from: "esicommunity23@gmail.com",
     to: email,
     subject: "Email Confirmation for ESI Community",
     html: `<p>Dear ${username.toUpperCase()}</p>

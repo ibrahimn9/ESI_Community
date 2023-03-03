@@ -2,10 +2,6 @@ import axios from "axios";
 
 const baseUrl = "http://localhost:3001/api";
 
-const getAll = async () =>  {
-    return await axios.get(baseUrl)
-}
-
 const getOne = async (id) => {
     return await axios.get(`${baseUrl}/user/${id}`)
 }
@@ -51,7 +47,6 @@ const sendToken = async (token) => {
 
 
 export default {
-    getAll,
     verifyEmail,
     verifyPassword,
     verifyUserName,
@@ -61,5 +56,4 @@ export default {
     login,
     getOne,
     sendToken,
-
 }

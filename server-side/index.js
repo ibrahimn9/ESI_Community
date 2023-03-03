@@ -6,18 +6,17 @@ const app = express();
 const validator = require("./validator");
 const mongoose = require("mongoose");
 const bodyparser = require("body-parser").urlencoded({ extended: true });
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 app.use(express.json());
 app.use(cors());
 app.use(bodyparser);
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Allow-Methods', '*')
-  res.setHeader('Access-Control-Allow-Headers', 'Authorization')
-  next()
-} )
-
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "*");
+  res.setHeader("Access-Control-Allow-Headers", "Authorization");
+  next();
+});
 
 morgan.token("post", (req, res) => {
   if (req.method === "POST") return JSON.stringify(req.body);
@@ -34,11 +33,6 @@ app.use(morgan("postFormat"));
 const User = require("./models/user");
 const bodyParser = require("body-parser");
 
-app.get("/api/user", (req, res) => {
-  User.find({}).then((users) => {
-    res.json(users);
-  });
-});
 
 app.get("/api/user/:id", (req, res, next) => {
   User.findById(req.params.id)
@@ -147,8 +141,6 @@ app.post("/api/confirm_code", async (req, res) => {
   });
 });
 
-
-
 app.post("/api/login", async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
@@ -157,8 +149,8 @@ app.post("/api/login", async (req, res) => {
 
   if (!(user && passwordCorrect)) {
     return res.json({
-      error: "invalid email or password"
-    })
+      error: "invalid email or password",
+    });
   }
 
   const userForToken = {
@@ -166,17 +158,12 @@ app.post("/api/login", async (req, res) => {
     id: user._id,
   };
 
-
   token = jwt.sign(userForToken, process.env.SECRET);
-  res
-    .status(200)
-    .json({ token, email: user.email, id: user._id });
-
+  res.status(200).json({ token, email: user.email, id: user._id });
 });
 
-
-app.post('/api/verify-token', (req, res) => {
-  const token = req.header("Authorization").split(' ')[1];
+app.post("/api/verify-token", (req, res) => {
+  const token = req.header("Authorization").split(" ")[1];
   try {
     const decodedToken = jwt.verify(token, process.env.SECRET);
     return res.json(decodedToken);
@@ -184,8 +171,6 @@ app.post('/api/verify-token', (req, res) => {
     return res.json({ error: "token missing or invalid" });
   }
 });
-
-
 
 const PORT = "3001";
 

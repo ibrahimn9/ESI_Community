@@ -27,7 +27,6 @@ const UserHome = () => {
     getUser();
   }, [])
 
-  
   return (
     <div style={{ color: 'white'}}>
       <h1>Username: {name}</h1>

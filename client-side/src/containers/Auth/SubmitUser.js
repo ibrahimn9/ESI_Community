@@ -4,7 +4,7 @@ import { images } from "../../constants";
 import { useSelector, useDispatch } from "react-redux";
 import { createUser } from "../../reducers/userReducer";
 import user from "../../services/user";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { MdDone } from "react-icons/md";
 import { GoChevronDown } from "react-icons/go";
 
@@ -13,6 +13,7 @@ const SubmitUser = () => {
   const [profilePicture, setProfilePicture] = useState();
   const [msg, setMsg] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const newUser = useSelector((state) => state);
 
   const handleSubmit = (e) => {
@@ -28,8 +29,10 @@ const SubmitUser = () => {
     if (!classOption || !profilePicture) {
       setMsg("Class or profile picture invalid");
     } else {
-      await user.createNewUser(addNewUser);
+      const { data } = await user.createNewUser(addNewUser);
       dispatch(createUser(addNewUser));
+      const { id } = data;
+      navigate(`/user_home/${id}`)
     }
   };
 
