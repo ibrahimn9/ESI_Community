@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import user from "../services/user";
+import user from "../services/userServices";
 
 import { NavBar, Header, Content, Source, Footer } from "../containers/Home";
 

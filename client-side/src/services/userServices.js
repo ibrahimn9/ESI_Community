@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const baseUrl = "http://localhost:3001/api";
+const baseUrl = "http://localhost:3001/api/user";
 
 const getOne = async (id) => {
-    return await axios.get(`${baseUrl}/user/${id}`)
+    return await axios.get(`${baseUrl}/${id}`)
 }
 
 const verifyEmail = async(email) => {
@@ -26,7 +26,7 @@ const confirmEmail = async(bodyReq) => {
 }
 
 const createNewUser = async (user) => {
-    return await axios.post(`${baseUrl}/user`, user)
+    return await axios.post(`${baseUrl}`, user)
 }
 
 const login = async (bodyReq) => {

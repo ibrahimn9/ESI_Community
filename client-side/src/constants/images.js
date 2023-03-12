@@ -17,6 +17,7 @@ import twitter from "../assets/twitterbrand.png";
 import upgrade from "../assets/upgrade.png";
 import logo from "../assets/logo.png"
 import ellipse from "../assets/ellipse.svg"
+import defaultUserPic from "../assets/defaultuserpic.jpg"
 
 export default {
   esialg,
@@ -38,4 +39,5 @@ export default {
   upgrade,
   logo,
   ellipse,
+  defaultUserPic,
 };

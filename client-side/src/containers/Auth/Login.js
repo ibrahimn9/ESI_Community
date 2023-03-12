@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Stack, Box, Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { images } from "../../constants";
-import user from "../../services/user";
+import user from "../../services/userServices";
 
 const Login = () => {
   const [email, setEmail] = useState("");

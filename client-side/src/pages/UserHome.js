@@ -1,26 +1,27 @@
 import { useEffect, useState } from 'react'
-import user from '../services/user';
+import userServices from '../services/userServices';
 import { useNavigate, useParams } from 'react-router-dom'
+import { createUser } from '../reducers/userReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { NavBar } from '../containers/UserHome';
+import {Box, Stack} from '@mui/material'
 
 const UserHome = () => {
-  const [name, setName] = useState("");
-  const [classObj, setClassObj] = useState({});
-  const [loggedUserJSON, setLoggedUserJSON] = useState(null);
   const navigate = useNavigate();
   const { id } = useParams();
+  const dispatch = useDispatch();
+  const currUser = useSelector((state) => state);
 
   
   const getUser = async () => {
-    const { data } = await user.getOne(id);
-    setName(data.name);
-    setClassObj(data.class)
+    const { data } = await userServices.getOne(id);
+    dispatch(createUser(data));
   }
   
   const handleLogout = () => {
     window.localStorage.clear()
     navigate('/auth/login');
   }
-  
 
   
   useEffect(() => {  
@@ -28,11 +29,10 @@ const UserHome = () => {
   }, [])
 
   return (
-    <div style={{ color: 'white'}}>
-      <h1>Username: {name}</h1>
-      <h1>User class: {classObj.class}CP</h1>
-      <button onClick={handleLogout}>logout</button>
-    </div>
+    <Box sx={{ background: '#F5F5F5', height: '100vh'}}>
+     <NavBar />
+     <button onClick={handleLogout}>logout</button>
+    </Box>
   )
 }
 

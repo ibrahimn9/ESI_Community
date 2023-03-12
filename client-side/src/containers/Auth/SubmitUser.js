@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 import { images } from "../../constants";
 import { useSelector, useDispatch } from "react-redux";
 import { createUser } from "../../reducers/userReducer";
-import user from "../../services/user";
+import user from "../../services/userServices";
 import { useNavigate } from "react-router-dom";
 import { MdDone } from "react-icons/md";
 import { GoChevronDown } from "react-icons/go";
@@ -38,6 +38,7 @@ const SubmitUser = () => {
 
   const handleProfilePictureChange = (event) => {
     const file = event.target.files[0];
+    console.log(file)
     const imageURL = URL.createObjectURL(file);
     setProfilePicture(imageURL);
   };

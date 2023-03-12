@@ -1,7 +1,7 @@
 const emailValidator = require("email-validator");
 const passwordValidator = require("password-validator");
 const nodemailer = require("nodemailer");
-const User = require("./models/user");
+const User = require("../models/user");
 
 const verifyEmail = async (email) => {
   const isValid = emailValidator.validate(email);

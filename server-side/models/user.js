@@ -1,12 +1,7 @@
-require("dotenv").config();
 const mongoose = require("mongoose");
-const url = process.env.USER_URI;
 
-mongoose
-  .set("strictQuery", false)
-  .connect(url)
-  .then(() => console.log("connected to the database"))
-  .catch((error) => error.message);
+
+
 
 const userSchema = new mongoose.Schema({
   name: { type: String, minLenght: 5, required: true },

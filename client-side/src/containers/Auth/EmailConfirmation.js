@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import user from "../../services/user";
+import user from "../../services/userServices";
 import { useNavigate } from "react-router-dom";
 import { Stack, Box } from "@mui/material";
 import { images } from "../../constants";

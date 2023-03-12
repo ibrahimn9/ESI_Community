@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import user from "../../services/user";
+import user from "../../services/userServices";
 import createValidationMessage from "../../constants/createValidationMessage";
 import { Link } from "react-router-dom";
 import images from "../../constants/images";
@@ -71,7 +71,7 @@ const Signup = () => {
   const sendEmailConfirmation = async () => {
     dispatch(
       createUser({
-        username,
+        name: username,
         email,
         password,
       })
