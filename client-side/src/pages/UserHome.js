@@ -3,7 +3,7 @@ import userServices from '../services/userServices';
 import { useNavigate, useParams } from 'react-router-dom'
 import { createUser } from '../reducers/userReducer';
 import { useDispatch, useSelector } from 'react-redux';
-import { NavBar } from '../containers/UserHome';
+import { NavBar, Content } from '../containers/UserHome';
 import {Box, Stack} from '@mui/material'
 
 const UserHome = () => {
@@ -26,12 +26,13 @@ const UserHome = () => {
   
   useEffect(() => {  
     getUser();
+    window.localStorage.clear()
   }, [])
 
   return (
-    <Box sx={{ background: '#F5F5F5', height: '100vh'}}>
+    <Box sx={{ background: '#F5F5F5', height: 'auto'}}>
      <NavBar />
-     <button onClick={handleLogout}>logout</button>
+     <Content />
     </Box>
   )
 }

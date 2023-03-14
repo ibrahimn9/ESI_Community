@@ -1,44 +1,76 @@
 const jwt = require("jsonwebtoken");
 const validator = require("../utils/validator");
-const config = require('../utils/config')
+const config = require("../utils/config");
 
 const postRouter = require("express").Router();
+
+
+const googleDrive = require("../utils/googleDrive");
+const multerService = require("../utils/multerService");
+const { google } = require("googleapis");
 
 const Post = require("../models/post");
 const User = require("../models/user");
 
-postRouter.get("/", async (request, response) => {
-  const blogs = await Blog.find({})
-  response.json(blogs.map((blog) => blog.toJSON()));
+postRouter.get("/", async (req, res) => {
+  const posts = await Post.find({});
+  return res.json(posts.map((post) => post.toJSON()));
 });
 
-postRouter.post('/create_post', async (req, res) => {
-  const { title, description, userID } = req.body;
-  //const token = request.header("Authorization").split(" ")[1];
-  //const decodedToken = jwt.verify(token, config.SECRET);
 
-  // if (!token || !decodedToken.id)
-  //   return response.status(401).json({ error: "token missing or invalid" });
+postRouter.post("/", multerService.upload.single("file"), async (req, res) => {
+  const file = req.file;
+  const { title, description } = req.body
+  console.log(title, description)
+  console.log(file)
+  const token = req.header("Authorization").split(" ")[1];
+  console.log(token)
+  try {
+    if (!file) {
+      return res.status(400).send("No file received.");
+    }
+    const decodedToken = jwt.verify(token, config.SECRET);
+    if (!decodedToken) {
+      return res.status(400);
+    }
+    const user = decodedToken.id;
+    const auth = googleDrive.authenticateGoogle();
+    const response = await googleDrive.uploadToGoogleDrive(file, auth);
+    multerService.deleteFile(file.path);
+    const fileId = response.id;
+    const driveService = google.drive({ version: "v3", auth });
+    const fileMetadata = await driveService.files.get({
+      fileId: fileId,
+      fields: "webViewLink",
+    });
+    const fileUrl = fileMetadata.data.webViewLink;
+    const post = new Post({
+      title,
+      description,
+      user,
+      url: fileUrl,
+    });
+    const savedPost = await post.save();
+    return res.status(201).send(savedPost);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send("Server Error");
+  }
+});
 
+postRouter.put("/:id", async (req, res) => {
+  const body = req.body;
+  const post = {
+    title: body.title,
+    description: body.description,
+    likes: body.likes,
+    user: body.user,
+  };
 
-  // if (!title || !description)
-  //   return response.status(400).json({ error: "title or url is missing" });
-
-  // const user = await User.findById(userID);
-  // console.log(user)
-
-  const post = new Post({
-    title,  
-    description,
-    //user: user.id,
+  const updatedPost = await Post.findByIdAndUpdate(req.params.id, post, {
+    new: true,
   });
-
-  const savedPost = await post.save();
-  // user.posts = user.posts.concat(savedPost._id);
-  // await user.save();
-
-  res.json(savedPost.toJSON());
-
+  return res.json(updatedPost);
 });
 
 module.exports = postRouter;

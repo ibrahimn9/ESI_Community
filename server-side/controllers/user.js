@@ -40,7 +40,6 @@ userRouter.post("/", async (req, res) => {
     email: body.email,
     passwordHash,
     class: body.class,
-    pic: body.pic,
   });
 
   const savedUser = await user.save();

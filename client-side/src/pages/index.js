@@ -4,3 +4,4 @@ export { default as Contact} from './Contact';
 export { default as Docs} from './Docs';
 export { default as Security} from './Security';
 export { default as UserHome} from './UserHome';
+export { default as CreatePost} from './CreatePost';

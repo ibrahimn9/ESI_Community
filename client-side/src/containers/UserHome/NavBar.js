@@ -1,14 +1,20 @@
 import { Box, Stack } from "@mui/material";
 import { images } from "../../constants";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { FiSearch } from "react-icons/fi";
 import { RiNotification3Line } from "react-icons/ri";
 import { FiMenu } from "react-icons/fi";
 
-import SearchBar from "../../components/SearchBar";
+import { SearchBar } from "../../components";
 
 const NavBar = () => {
+  const navigate = useNavigate();
+
+  const handleCreatePostClick = () => {
+    navigate('/user_home/create_post');
+  };
+
   return (
     <Stack
       direction="row"
@@ -35,7 +41,12 @@ const NavBar = () => {
           justifyContent: "space-around",
         }}
       >
-        <button className="navtxt-btn nav-btn btn">Create Post</button>
+        <button
+          className="navtxt-btn nav-btn btn"
+          onClick={handleCreatePostClick}
+        >
+          Create Post
+        </button>
         <button className="nos-btn btn">
           <RiNotification3Line />
         </button>
