@@ -29,16 +29,45 @@ const createNewUser = async (user) => {
     return await axios.post(`${baseUrl}`, user)
 }
 
+
 const login = async (bodyReq) => {
     return await axios.post(`${baseUrl}/login`, bodyReq);
 }
 
-
-
-
-
 const sendToken = async (token) => {
     return await axios.post(`${baseUrl}/verify-token`, null, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        },
+    })
+}
+
+const sendFollow = async (id, token) => {
+    return await axios.put(`${baseUrl}/follow/${id}`, null, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        },
+    })
+}
+
+const sendUnfollow = async (id, token) => {
+    return await axios.put(`${baseUrl}/unfollow/${id}`, null, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        },
+    })
+}
+
+const sendMark = async (id, token) => {
+    return await axios.put(`${baseUrl}/mark/${id}`, null, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        },
+    })
+}
+
+const sendUnmark = async (id, token) => {
+    return await axios.put(`${baseUrl}/unmark/${id}`, null, {
         headers: {
             'Authorization': `Bearer ${token}`,
         },
@@ -56,4 +85,8 @@ export default {
     login,
     getOne,
     sendToken,
+    sendFollow,
+    sendUnfollow,
+    sendMark,
+    sendUnmark,
 }

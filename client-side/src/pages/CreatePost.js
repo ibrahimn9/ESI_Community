@@ -17,17 +17,14 @@ const CreatePost = () => {
     const file = e.target.files[0];
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("title", title);
-    formData.append("description", description);
-    console.log(formData)
     setFile(formData);
   };
 
   const handlePublish = async () => {
     const { token } = JSON.parse(window.localStorage.getItem('loggedUser'))
-    console.log(token)
+    file.append("title", title);
+    file.append("description", description);
     const { data } = await postService.createPost(file, token);
-    console.log(data);
   };
 
   return (

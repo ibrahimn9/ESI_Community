@@ -3,14 +3,14 @@ import { Box } from "@mui/material";
 import { images } from "../../constants";
 import { useSelector, useDispatch } from "react-redux";
 import { createUser } from "../../reducers/userReducer";
-import user from "../../services/userServices";
+import userServices from "../../services/userServices";
 import { useNavigate } from "react-router-dom";
 import { MdDone } from "react-icons/md";
 import { GoChevronDown } from "react-icons/go";
 
 const SubmitUser = () => {
   const [classOption, setClassOption] = useState({});
-  const [profilePicture, setProfilePicture] = useState();
+  const [file, setFile] = useState();
   const [msg, setMsg] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -21,26 +21,30 @@ const SubmitUser = () => {
   };
 
   const handleLogin = async (e) => {
-    const addNewUser = {
-      ...newUser,
-      class: classOption,
-      pic: profilePicture,
-    };
-    if (!classOption || !profilePicture) {
+    const { name, password, email } = newUser;
+    file.append("class", classOption);
+    file.append("name", name);
+    file.append("password", password);
+    file.append("email", email);
+    if (!classOption || !file) {
       setMsg("Class or profile picture invalid");
     } else {
-      const { data } = await user.createNewUser(addNewUser);
-      dispatch(createUser(addNewUser));
+      const { data } = await userServices.createNewUser(file);
+      dispatch(createUser(data));
       const { id } = data;
-      navigate(`/user_home/${id}`)
+      const res = await userServices.login({ email, password })
+      if(res.data.token) {
+        window.localStorage.setItem("loggedUser", JSON.stringify(data))
+        navigate(`/user_home/${id}`)
+      }
     }
   };
 
   const handleProfilePictureChange = (event) => {
     const file = event.target.files[0];
-    console.log(file)
-    const imageURL = URL.createObjectURL(file);
-    setProfilePicture(imageURL);
+    const formData = new FormData();
+    formData.append("file", file);
+    setFile(formData);
   };
 
   return (

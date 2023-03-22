@@ -8,9 +8,10 @@ import { BsBookmark } from "react-icons/bs";
 import postService from "../services/postService";
 import userServices from "../services/userServices";
 
-const Post = ({ post }) => {
-  const { title, description, user } = post;
+const Post = ({ postId }) => {
+  const [post, setPost] = useState();
   const [userObj, setUserObj] = useState();
+  const [loggedObj, setLoggedObj] = useState();
   const [likes, setLikes] = useState();
   const [votedUp, setVotedUp] = useState(false);
   const [votedDown, setVotedDown] = useState(false);
@@ -18,25 +19,29 @@ const Post = ({ post }) => {
   const [mark, setMark] = useState(false)
   const loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"));
   const navigate = useNavigate();
- 
 
-  useEffect(() => {
-    userServices.getOne(user).then(({ data }) => setUserObj(data));
-    setLikes(post.likes)
-    isMarked()
-  }, []);
-
-  const isMarked = async() => {
-    const { data } = await userServices.getOne(loggedUser.id)
-    if(data.bookmarks.includes(post.id)) {
-      setMark(true)
+  const getPostAndUser = async () => {
+    const { data } = await postService.getOne(postId);
+    const { user } = data;
+    const res = await userServices.getOne(user);
+    const response = await userServices.getOne(loggedUser.id);   
+    setPost(data);
+    setUserObj(res.data);
+    setLikes(data.likes);
+    if(response.data?.bookmarks.includes(postId)){
+        setMark(true)
     }
   }
+
+  useEffect(() => {
+    getPostAndUser();
+    }, [])    
+
 
   const handleUpClick = async () => {
     const { data } = await postService.updatePost({
       ...post,
-      likes: likes + 1,
+      likes: post?.likes + 1,
     });
     setLikes(data.likes);
     setVotedUp(true);
@@ -53,7 +58,7 @@ const Post = ({ post }) => {
     setVotedUp(false);
   };
 
-  const handleMarkClick = async () => {
+  const handleMarkClick = async() => {
     if(!mark){
     const { data } = await userServices.sendMark(post.id, loggedUser.token);
     setMark(true);
@@ -103,7 +108,7 @@ const Post = ({ post }) => {
         </Stack>
       </Stack>
       <Box sx={{ ml: 7 }}>
-        <h3 className="post-title">{title}</h3>
+        <h3 className="post-title">{post?.title}</h3>
       </Box>
       <Stack
         direction="row"

@@ -17,14 +17,23 @@ postRouter.get("/", async (req, res) => {
   return res.json(posts.map((post) => post.toJSON()));
 });
 
+postRouter.get("/:id", (req, res, next) => {
+  Post.findById(req.params.id)
+    .then((returnedPost) => {
+      if (returnedPost) {
+        res.json(returnedPost);
+      } else {
+        res.status(404).end();
+      }
+    })
+    .catch((error) => next(error));
+});
+
 
 postRouter.post("/", multerService.upload.single("file"), async (req, res) => {
   const file = req.file;
   const { title, description } = req.body
-  console.log(title, description)
-  console.log(file)
   const token = req.header("Authorization").split(" ")[1];
-  console.log(token)
   try {
     if (!file) {
       return res.status(400).send("No file received.");
@@ -33,7 +42,8 @@ postRouter.post("/", multerService.upload.single("file"), async (req, res) => {
     if (!decodedToken) {
       return res.status(400);
     }
-    const user = decodedToken.id;
+
+    const user = await User.findById(decodedToken.id);
     const auth = googleDrive.authenticateGoogle();
     const response = await googleDrive.uploadToGoogleDrive(file, auth);
     multerService.deleteFile(file.path);
@@ -43,14 +53,17 @@ postRouter.post("/", multerService.upload.single("file"), async (req, res) => {
       fileId: fileId,
       fields: "webViewLink",
     });
+
     const fileUrl = fileMetadata.data.webViewLink;
     const post = new Post({
       title,
       description,
-      user,
+      user: user._id.toString(),
       url: fileUrl,
     });
     const savedPost = await post.save();
+    user.posts = user.posts.concat(savedPost._id.toString());
+    const savedUser = await user.save();
     return res.status(201).send(savedPost);
   } catch (error) {
     console.log(error);
@@ -64,9 +77,8 @@ postRouter.put("/:id", async (req, res) => {
     title: body.title,
     description: body.description,
     likes: body.likes,
-    user: body.user,
+    user: body.user, 
   };
-
   const updatedPost = await Post.findByIdAndUpdate(req.params.id, post, {
     new: true,
   });

@@ -1,10 +1,16 @@
 const bcrypt = require("bcrypt");
 const validator = require("../utils/validator");
 const jwt = require("jsonwebtoken");
+const config = require("../utils/config")
+
+const googleDrive = require("../utils/googleDrive");
+const multerService = require("../utils/multerService");
+const { google } = require("googleapis");
 
 const userRouter = require("express").Router();
 
 const User = require("../models/user");
+const Post = require("../models/post");
 
 userRouter.get("/:id", (req, res, next) => {
   User.findById(req.params.id)
@@ -26,20 +32,36 @@ userRouter.delete("/:id", (req, res, next) => {
     .catch((error) => next(error));
 });
 
-userRouter.post("/", async (req, res) => {
+userRouter.post("/", multerService.upload.single("file"), async (req, res) => {
   const body = req.body;
+  const file = req.file;
 
   if (!body.name || !body.password || !body.email || !body.class) {
     return res.status(400).json({ error: "name or email or pwd missing" });
   }
+  const auth = googleDrive.authenticateGoogle();
+  const response = await googleDrive.uploadToGoogleDrive(file, auth);
+  multerService.deleteFile(file.path);
+  const fileId = response.id;
+  const driveService = google.drive({ version: "v3", auth });
+    const fileMetadata = await driveService.files.get({
+      fileId: fileId,
+      fields: "webViewLink",
+    });
+  const fileUrl = fileMetadata.data.webViewLink;
+  const pic = fileUrl.match(/\/d\/(.+?)\/view/)[1];
+
   const saltRounds = 10;
   const passwordHash = await bcrypt.hash(body.password, saltRounds);
+
+ 
 
   const user = new User({
     name: body.name,
     email: body.email,
     passwordHash,
     class: body.class,
+    pic,
   });
 
   const savedUser = await user.save();
@@ -140,6 +162,102 @@ userRouter.post("/verify-token", (req, res) => {
     return res.json(decodedToken);
   } catch (err) {
     return res.json({ error: "token missing or invalid" });
+  }
+});
+
+userRouter.put("/follow/:userId", async (req,res) => {
+  const token = req.header("Authorization").split(" ")[1];
+  const decodedToken = jwt.verify(token, config.SECRET);
+  const { userId } = req.params;
+  if (!decodedToken) {
+    return res.status(400);
+  }
+  
+  const user = await User.findById(decodedToken.id);
+  const userToFollow = await User.findById(userId);
+  if(!(user && userToFollow)) {
+    return res.status(404)
+  }
+
+  user.folowing = user.folowing.concat(userId);
+  userToFollow.folowers = userToFollow.folowers.concat(decodedToken.id);
+  
+  await user.save()
+  await userToFollow.save()
+
+  return res.status(200).json({ message: 'Followed user successfully' })
+})
+
+userRouter.put('/unfollow/:userId', async (req, res) => {
+  const { userId } = req.params;
+  const token = req.header("Authorization").split(" ")[1];
+  const decodedToken = jwt.verify(token, config.SECRET);
+
+  if (!decodedToken) {
+    return res.status(400);
+  }
+
+  try {
+    const user = await User.findById(userId);
+    const unfollower = await User.findById(decodedToken.id)
+    user.folowers = user.folowers.filter(
+      (followerId) => followerId !== decodedToken.id
+    );
+
+    unfollower.folowing = unfollower.folowing.filter(
+      (followingId) => followingId !== userId
+    )
+
+    await user.save();
+    await unfollower.save();
+
+    res.status(200).json({ message: 'Unfollowed user successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+userRouter.put('/mark/:postId', async (req, res) => {
+  const token = req.header("Authorization").split(" ")[1];
+  const decodedToken = jwt.verify(token, config.SECRET);
+
+  const { postId } = req.params;
+
+  if (!decodedToken) {
+    return res.status(400);
+  }
+
+  try {
+    const user = await User.findById(decodedToken.id);
+    user.bookmarks = user.bookmarks.concat(postId);
+    await user.save();
+    res.status(200).json({ message: 'marked post successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+userRouter.put('/unmark/:postId', async (req, res) => {
+  const token = req.header("Authorization").split(" ")[1];
+  const decodedToken = jwt.verify(token, config.SECRET);
+
+  const { postId } = req.params;
+
+  if (!decodedToken) {
+    return res.status(400);
+  }
+
+  try {
+    const user = await User.findById(decodedToken.id);
+    user.bookmarks = user.bookmarks.filter((post) => post !== postId);
+    await user.save();
+    res.status(200).json({ message: 'marked post successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 

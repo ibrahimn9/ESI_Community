@@ -26,7 +26,6 @@ const UserHome = () => {
   
   useEffect(() => {  
     getUser();
-    window.localStorage.clear()
   }, [])
 
   return (

@@ -137,7 +137,7 @@ const Signup = () => {
               direction={{ xs: "column", md: "row" }}
               sx={{ alignItems: { md: "center" } }}
             >
-              <input type="email" value={email} onChange={handleEmailChange} />
+              <input type="email" onChange={handleEmailChange} />
               <button
                 disabled={!isEmailValid}
                 onClick={() => setDisplayPassword(true)}
@@ -156,7 +156,6 @@ const Signup = () => {
                 >
                   <input
                     type="password"
-                    value={password}
                     onChange={handlePasswordChange}
                   />
                   <button
@@ -179,7 +178,6 @@ const Signup = () => {
                 >
                   <input
                     type="text"
-                    value={username}
                     onChange={handleUsernameChange}
                   />
                   <Link to="/auth/email_confirmation" style={{ flexGrow: "1" }}>

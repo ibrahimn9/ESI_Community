@@ -7,6 +7,10 @@ const getAll = async () => {
     return data;
 }
 
+const getOne = async (id) => {
+    return await axios.get(`${baseUrl}/${id}`)
+}
+
 const createPost = async (post, token) => {
     return axios.post(`${baseUrl}`, post, {
         headers: {
@@ -22,6 +26,7 @@ const updatePost = async (post) => {
 
 export default {
     getAll,
+    getOne,
     updatePost,
     createPost,
 }

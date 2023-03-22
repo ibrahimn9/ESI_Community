@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 import { Box, Stack } from "@mui/material";
 import { images } from "../../constants";
 import { useNavigate } from "react-router-dom";
@@ -7,9 +9,21 @@ import { RiNotification3Line } from "react-icons/ri";
 import { FiMenu } from "react-icons/fi";
 
 import { SearchBar } from "../../components";
+import userServices from '../../services/userServices';
 
 const NavBar = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState();
+  const loggedUser = JSON.parse(window.localStorage.getItem('loggedUser'));
+
+  const getUser = async() => {
+    const { data } = await userServices.getOne(loggedUser.id);
+    setUser(data)
+  }
+
+  useEffect(() => {
+    getUser();
+  }, [])
 
   const handleCreatePostClick = () => {
     navigate('/user_home/create_post');
@@ -51,8 +65,12 @@ const NavBar = () => {
           <RiNotification3Line />
         </button>
         <img
-          src={images.defaultUserPic}
-          style={{ height: "60px", width: "60px", borderRadius: "50%" }}
+          src={
+            user?.pic
+              ? `https://drive.google.com/uc?export=view&id=${user?.pic}`
+              : images.defaultUserPic
+          }
+          style={{ height: "40px", width: "40px", borderRadius: "50%", marginLeft: '15px' }}
         />
       </Box>
     </Stack>

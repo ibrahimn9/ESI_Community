@@ -14,7 +14,7 @@ const Content = () => {
     <Box>
       <Stack direction="row">
         <div className="left">left</div>
-        <Box sx={{ flexGrow: 1 }}>
+        <Box sx={{ flexGrow: 1, px: { xs: 4, md: 0 } }}>
           {posts.map((post) => (
             <Post key={post.id} post={post} />
           ))}
