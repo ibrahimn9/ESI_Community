@@ -6,3 +6,4 @@ export { default as Security} from './Security';
 export { default as UserHome} from './UserHome';
 export { default as CreatePost} from './CreatePost';
 export { default as UserProfile} from './UserProfile';
+export { default as PostDetail} from './PostDetail';

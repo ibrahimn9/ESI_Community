@@ -85,4 +85,29 @@ postRouter.put("/:id", async (req, res) => {
   return res.json(updatedPost);
 });
 
+postRouter.put("/comment/:postId", async (req,res) => {
+  const token = req.header("Authorization").split(" ")[1];
+  const body = req.body;
+  const decodedToken = jwt.verify(token, config.SECRET);
+  const { postId } = req.params;
+  if (!decodedToken) {
+    return res.status(400);
+  }
+  
+  const user = await User.findById(decodedToken.id)
+  const post = await Post.findById(postId);
+  if(!(user && post)) {
+    return res.status(404)
+  }
+
+  const comment = {
+    user: decodedToken.id,
+    text: body.comment,
+  }
+  
+  post.comments = post.comments.concat(comment);
+  await post.save()
+  return res.status(200).json(comment)
+})
+
 module.exports = postRouter;

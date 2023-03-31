@@ -69,6 +69,10 @@ const Post = ({ post }) => {
     navigate(`/user_profile/${userObj.id}`)
   };
 
+  const handlePostClick = () => {
+    navigate(`/post_detail/${post.id}`)
+  }
+
   return (
     <Box
       sx={{
@@ -92,7 +96,8 @@ const Post = ({ post }) => {
             width: "50px",
             borderRadius: "50%",
             display: "inline",
-            marginRight: '5px'
+            marginRight: '5px',
+            border: "1px solid #DEDEDE",
           }}
         />
         <Stack direction="column" sx={{ justifyContent: "center" }}>
@@ -103,7 +108,7 @@ const Post = ({ post }) => {
         </Stack>
       </Stack>
       <Box sx={{ ml: 7 }}>
-        <h3 className="post-title">{title}</h3>
+        <h3 className="post-title" onClick={handlePostClick}>{title}</h3>
       </Box>
       <Stack
         direction="row"

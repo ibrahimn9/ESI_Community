@@ -23,10 +23,18 @@ const updatePost = async (post) => {
     return await axios.put(`${baseUrl}/${post.id}`, post)
 }
 
+const addComment = async (id, token, comment) =>{
+    return axios.put(`${baseUrl}/comment/${id}`, comment, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        },
+    })
+}
 
 export default {
     getAll,
     getOne,
     updatePost,
     createPost,
+    addComment,
 }

@@ -97,7 +97,8 @@ const Post = ({ postId }) => {
             width: "50px",
             borderRadius: "50%",
             display: "inline",
-            marginRight: '5px'
+            marginRight: '5px',
+            border: "1px solid #DEDEDE",
           }}
         />
         <Stack direction="column" sx={{ justifyContent: "center" }}>

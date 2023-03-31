@@ -584,6 +584,35 @@ a {
   border: 10px solid black;
 }
 
+.cmnt {
+  outline: none;
+  background: none !important;
+  border: 1px solid #DEDEDE;
+  border-radius: 5px;
+  line-height: 30px;
+  flex-basis: 78%;
+  font-size: 18px;
+  font-weight: 200;
+  padding: 10px 20px;
+  transition: ease-in-out;
+}
+
+
+.cmnt::placeholder {
+  font-size: 16px;
+}
+
+.cmnt:focus {
+  border: 2px solid var(--color-primary);
+}
+
+.post-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+
+}
+
+
 /*--------------extra small----------------*/
 @media screen and (max-width: 600px) {
   .navtxt-btn {
