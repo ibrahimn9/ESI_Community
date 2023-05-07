@@ -12,11 +12,7 @@ export const createUser = (content) => {
     return {
         type: 'NEW_USER',
         payload: {
-            name: content.name,
-            email: content.email,
-            password: content.password,
-            class: content.class,
-            pic: content.pic,
+            ...content
         }
     }
 }

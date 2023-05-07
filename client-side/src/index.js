@@ -2,9 +2,18 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
-import { createStore } from "redux";
+import { createStore, combineReducers } from "redux";
 import { Provider } from "react-redux";
-import reducer from './reducers/userReducer'
+
+import userReducer from './reducers/userReducer'
+import postReducer from './reducers/postReducer'
+import usersReducer from "./reducers/usersReducer";
+
+const reducer = combineReducers({
+  user: userReducer,
+  users: usersReducer,
+  post: postReducer,
+})
 
 const store = createStore(reducer);
 

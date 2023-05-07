@@ -59,9 +59,38 @@ const confirmCode = async (email) => {
   return confirmationCode;
 };
 
+const sendMessage = (message, emails) => {
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "esicommunity23@gmail.com",
+      pass: "xcesyhotluaghkct",
+    },
+  });
+
+  emails.map(email => {
+    const mailOption = {
+      from: "esicommunity23@gmail.com",
+      to: email,
+      subject: message.subject,
+      html: message.text,
+    };
+
+    transporter.sendMail(mailOption, (err, info) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("res" + info.response);
+      }
+    });
+  })
+}
+
 module.exports = {
   verifyEmail,
   verifyPassword,
   verifyUsername,
   confirmCode,
+  sendMessage,
 };

@@ -2,7 +2,7 @@ import { Stack, Box, Typography } from "@mui/material";
 import { FiFacebook, FiGithub, FiTwitter } from "react-icons/fi";
 
 const Footer = () => (
-  <Box sx={{ backgroundColor: "#F7F2F2" }} className="footer">
+  <Box sx={{ backgroundColor: "#F7F2F2", mt: 8 }} className="footer">
     <Stack direction="column" sx={{ mx: { xs: 4, lg: 15 } }}>
       <Stack
         direction="row"

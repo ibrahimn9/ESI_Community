@@ -12,6 +12,11 @@ const userRouter = require("express").Router();
 const User = require("../models/user");
 const Post = require("../models/post");
 
+userRouter.get('/', async(req, res) => {
+  const users = await User.find({});
+  return res.json(users.map((user) => user.toJSON()));
+})
+
 userRouter.get("/:id", (req, res, next) => {
   User.findById(req.params.id)
     .then((returnedUser) => {
@@ -69,14 +74,7 @@ userRouter.post("/", multerService.upload.single("file"), async (req, res) => {
 });
 
 userRouter.put("/:id", (req, res, next) => {
-  const body = req.body;
-
-  const user = {
-    name: body.name,
-    email: body.email,
-    pwd: body.pwd,
-    niv: body.niv,
-  };
+  const user = req.body;
 
   User.findByIdAndUpdate(req.params.id, user, {
     new: true,
@@ -260,6 +258,12 @@ userRouter.put('/unmark/:postId', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
+userRouter.post('/send-message', (req, res) => {
+  const { message, emails } = req.body
+  validator.sendMessage(message, emails)
+  res.status(200).json({ message: 'message sent successfully' });
+})
 
 
 module.exports = userRouter;

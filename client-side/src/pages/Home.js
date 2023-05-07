@@ -6,8 +6,6 @@ import user from "../services/userServices";
 import { NavBar, Header, Content, Source, Footer } from "../containers/Home";
 
 
-
-
 const Home = () => {
   const navigate = useNavigate();
 

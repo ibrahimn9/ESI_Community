@@ -4,8 +4,9 @@
   --color-gray: #b4afaf;
   --color-dark-gray: #242424;
   --color-primary: #205bf1;
-  --color-secondary: #d12f58;
+  --color-secondary: #f2c344;
   --color-dark: #1e1f24;
+  --color-tags: #97a6b4;
   --color-dark-blue: #011947;
   --color-dark-shadow: #121212;
   --color-success: #2ea44f;
@@ -391,7 +392,7 @@ a {
 }
 
 .search-form:hover {
-  border-color: #d7d6d6;
+  border-color: var(--color-tags);
 }
 
 .search-bar {
@@ -401,11 +402,16 @@ a {
   font-size: 18px;
 }
 
+.search-bar::placeholder {
+  color: var(--color-tags);
+}
+
 .nos-btn {
   font-size: 26px;
   background: none;
   border: none;
-  color: var(--color-dark-gray);
+  color: #04396a;
+  transition: 0.3s;
 }
 
 .nos-btn:hover {
@@ -413,16 +419,21 @@ a {
 }
 
 .navtxt-btn {
-  background: none;
-  border: 1px solid #205bf1;
-  color: #205bf1;
-  transition: 0.2s;
+  background: linear-gradient(
+    278.58deg,
+    #3c87f0 0%,
+    rgba(60, 135, 240, 0.46) 111.33%
+  );
+  color: #ffffff;
+  font-weight: 600;
+  padding: 12px 18px;
+  border-radius: 20px;
   margin-right: 15px;
 }
 
 .navtxt-btn:hover {
-  background: #205bf1;
-  color: white;
+  background: #3c87f0;
+  box-shadow: 2px 6px 10px rgba(60, 135, 240, 0.46);
 }
 
 .menu-btn {
@@ -436,33 +447,35 @@ a {
   position: sticky;
 }
 
-.right {
-  flex-basis: 30%;
-  position: sticky;
-}
-
-.profile-link {
-  background: none;
-  text-align: left;
-  font-size: 18px;
-  padding: 0;
-}
-
 .post-label {
   font-size: 12px;
-  font-weight: 200;
+  font-weight: 400;
 }
 
 .post-link {
-  color: #3f3f3f;
+  color: var(--color-tags);
 }
 
 .post-link:hover {
   color: var(--color-dark-gray);
 }
 
+.profile-link {
+  background: none;
+  text-align: left;
+  font-size: 20px;
+  color: #04396a;
+  font-weight: 600;
+  padding: 0;
+  transition: 0.2s;
+}
+
+.profile-link:hover {
+  color: #2f3ab2;
+}
+
 .post-title {
-  color: var(--color-dark-gray);
+  color: #04396a;
   transition: 0.2s;
   cursor: pointer;
   font-size: 24px;
@@ -474,17 +487,25 @@ a {
 }
 
 .tags {
-  color: #717171;
+  color: var(--color-tags);
   font-size: 16px;
   font-weight: 400;
   margin-left: 5px;
+}
+
+.post-tags {
+  color: var(--color-secondary);
+}
+
+.on {
+  color: #3c87f0;
 }
 
 .inter-btn {
   background: none;
   border: none;
   font-size: 30px;
-  color: #3f3f3f;
+  color: var(--color-tags);
   transition: 0.2s;
   cursor: pointer;
 }
@@ -499,7 +520,7 @@ a {
 
 .post-static {
   font-size: 18px;
-  color: var(--color-dark-gray);
+  color: #04396a;
   font-weight: bold;
   text-align: center;
 }
@@ -513,12 +534,12 @@ a {
 .header-input {
   font-size: 50px;
   font-weight: 900;
-  display: block;
+  width: 100%;
   margin-bottom: 15px;
 }
 
 .header-input::placeholder {
-  color: #a1a1a1;
+  color: var(--color-tags);
 }
 
 .sub-input {
@@ -529,18 +550,18 @@ a {
 }
 
 .sub-input::placeholder {
-  color: #a1a1a1;
+  color: var(--color-tags);
 }
 
 .post-btn {
-  background: var(--color-primary);
+  background: #3c87f0;
   color: white;
   font-size: 18px;
   padding: 8px 22px;
   border-radius: 5px;
-  margin-left: 120px;
+  margin-left: 10%;
   margin-top: 20px;
-  transition: .2s;
+  transition: 0.2s;
 }
 
 .post-btn:hover {
@@ -550,11 +571,11 @@ a {
 .txt-btn {
   background: transparent;
   color: #3d3d3d;
-  border: 2px solid #d6d6d7;
+  border: 2px solid var(--color-tags);
   font-size: 18px;
   padding: 8px 22px;
   border-radius: 5px;
-  transition: .2s;
+  transition: 0.2s;
 }
 
 .txt-btn:hover {
@@ -565,15 +586,15 @@ a {
 
 .switch-btn {
   font-size: 22px;
-  color: #717171;
+  color: var(--color-tags);
   background: none;
   padding: 12px 22px;
   margin-bottom: -8px;
 }
 
 .selected {
-  border-bottom: 2px solid black;
-  color: black;
+  border-bottom: 3px solid var(--color-secondary);
+  color: #04396a;
 }
 
 .profile-pic {
@@ -582,12 +603,13 @@ a {
   border-radius: 50%;
   margin-top: -75px;
   border: 10px solid black;
+  object-fit: "cover";
 }
 
 .cmnt {
   outline: none;
   background: none !important;
-  border: 1px solid #DEDEDE;
+  border: 1px solid #dedede;
   border-radius: 5px;
   line-height: 30px;
   flex-basis: 78%;
@@ -596,7 +618,6 @@ a {
   padding: 10px 20px;
   transition: ease-in-out;
 }
-
 
 .cmnt::placeholder {
   font-size: 16px;
@@ -609,14 +630,109 @@ a {
 .post-btn:disabled {
   opacity: 0.7;
   cursor: not-allowed;
-
 }
 
+.rank-detail {
+  top: 0;
+  right: 0;
+  border-top-right-radius: 50px;
+  width: 0;
+  height: 0;
+  border-top: 40px solid transparent;
+  border-bottom: 40px solid transparent;
+  transform: translate(16%, -33%) rotate(-45deg);
+  display: inline-block;
+  border-top-right-radius: 5px;
+  position: absolute;
+  object-fit: scale-down;
+}
+
+.rank {
+  position: absolute;
+  right: 5px;
+  top: -14px;
+  color: white;
+}
+
+.secondary-btn {
+  background: linear-gradient(152.03deg, #f5d06c -19.27%, #e6b93f 109.91%);
+  border-radius: 28px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  color: white;
+  width: 80%;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 15px 0;
+  transition: 0.3s;
+}
+
+.secondary-btn:hover {
+  box-shadow: 6px 4px 25px rgba(230, 156, 62, 0.34);
+  opacity: 0.9;
+}
+
+.cat {
+  color: #97A6B4;
+}
+
+.active-cat {
+  background: linear-gradient(
+    90deg,
+    rgba(60, 135, 240, 0.27) 0%,
+    rgba(60, 135, 240, 0.229206) 22.67%,
+    rgba(60, 135, 240, 0.0729) 109.53%
+  );
+  padding: 10px 14px;
+  border-radius: 20px;
+  color: #04396A;
+}
+
+.active-icon svg {
+  color: #04396A;
+}
+
+.sch-box {
+  display: flex;
+  align-items: center;
+  width: 50%;
+  justify-content: space-around;
+  border: 2px solid #E8E8EA;
+  border-radius: 20px;
+  color: rgba(4, 57, 106, 1);
+  padding: 12px 5px;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+
+.sch-box h3 {
+  margin: 0;
+} 
+
+.select-input {
+  border: 1px solid #97A6B4;
+  border-radius: 10px;
+  margin-top: 10px;
+  padding: 10px 16px;
+  font-size: 16px;
+  width: 75%;
+}
+
+.select-input:focus {
+  border: 2px solid #3C87F0BF;
+}
+
+.select-input option:active {
+  background: red;
+}
 
 /*--------------extra small----------------*/
 @media screen and (max-width: 600px) {
   .navtxt-btn {
     display: none;
+  }
+  .header-input {
+    font-size: 32px;
   }
 }
 

@@ -15,7 +15,7 @@ import splashfooter from "../assets/splash3.png";
 import telescope from "../assets/telescope.png";
 import twitter from "../assets/twitterbrand.png";
 import upgrade from "../assets/upgrade.png";
-import logo from "../assets/logo.png"
+import logo from "../assets/logo.svg"
 import ellipse from "../assets/ellipse.svg"
 import defaultUserPic from "../assets/defaultuserpic.jpg"
 

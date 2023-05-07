@@ -8,7 +8,16 @@ const postSchema = new mongoose.Schema(
     user: String,
     likes: { type: Number, default: 0 },
     comments: [Object],
-    tags: [String]
+    tags: [String],
+    up: [String],
+    down: [String],
+    path: {
+      year: String,
+      speciality: String,
+      semester: String,
+      module: String,
+      folder: String,
+    }
   },
   { timestamps: true }
 );

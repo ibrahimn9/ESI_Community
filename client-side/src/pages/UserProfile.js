@@ -13,27 +13,43 @@ import postService from "../services/postService";
 import { Footer } from "../containers/Home";
 
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from 'react-redux';
+
 import { Post, PostById } from "../components";
 
 const UserProfile = () => {
   const [user, setUser] = useState();
-  const [posts, setPosts] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
+  const [posts, setPosts] = useState([])
+  const [users, setUsers] = useState([])
   const [selectPost, setSelectPost] = useState(true);
   const { id } = useParams();
   const loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"));
   const loggedId = loggedUser.id;
 
+
   const getUser = async () => {
-    const { data } = await userServices.getOne(id);
-    setUser(data);
-    if (data.folowers.includes(loggedId)) {
-      setIsFollowing(true);
-    }
+      const { data } = await userServices.getOne(id);
+      setUser(data);
+      if (data.folowers.includes(loggedId)) {
+        setIsFollowing(true);
+      }
   };
 
+  const getUsers = async() => {
+    const { data } = await userServices.getAll();
+    setUsers(data);
+  }
+
+
+  const getPosts = async() => {
+    const posts = await postService.getAll();
+    setPosts(posts)
+  }
+
+
   const handleFollow = async () => {
-    const { data } = await userServices.sendFollow(id, loggedUser.token);
+    const { data   } = await userServices.sendFollow(id, loggedUser.token);
     setIsFollowing(true);
   };
 
@@ -44,14 +60,14 @@ const UserProfile = () => {
 
   useEffect(() => {
     getUser();
+    getUsers();
+    getPosts();
   }, []);
 
-  useEffect(() => {
-    postService.getAll().then((posts) => setPosts(posts));
-  }, []);
+ 
 
   return (
-    <Box sx={{ background: "#F5F5F5", height: "auto" }}>
+    <Box sx={{ background: "#EDF1F2", height: "auto" }}>
       <NavBar />
       <Box
         sx={{
@@ -65,10 +81,10 @@ const UserProfile = () => {
         <Box sx={{ background: "#000000", height: "140px", width: "100%" }} />
         <Box
           sx={{
-            background: "#FFFFFF",
+            background: "#FDFDFD",
             height: "auto",
             borderRadius: 2,
-            border: "1px solid #DEDEDE",
+            border: "1px solid rgba(153, 169, 183, 0.7)",
             width: { xs: "95%", md: "60%" },
             mt: -8,
             position: "relative",
@@ -105,6 +121,7 @@ const UserProfile = () => {
                 position: "absolute",
                 right: "5%",
                 margin: 0,
+                background: '#F2C344'
               }}
               className="post-btn btn"
             >
@@ -127,6 +144,7 @@ const UserProfile = () => {
           <h1
             style={{
               fontWeight: "900",
+              color: '#04396A'
             }}
             className="mt"
           >
@@ -149,33 +167,33 @@ const UserProfile = () => {
             <Box sx={{ display: "flex", alignItems: "center", ml: 2, mr: 2 }}>
               <FaSchool
                 style={{
-                  color: "#717171",
+                  color: "#04396A",
                   fontSize: "30px",
                 }}
               />
-              <span className="tags">ESI SBA</span>
+              <span className="tags on">ESI SBA</span>
             </Box>
             <Box sx={{ display: "flex", alignItems: "center", mr: 2 }}>
               <IoMdSchool
                 style={{
-                  color: "#717171",
+                  color: "#04396A",
                   fontSize: "30px",
                 }}
               />
               {user?.class.class > 2 ? (
-                <span className="tags">{user?.class.class}CS</span>
+                <span className="tags on">{user?.class.class}CS</span>
               ) : (
-                <span className="tags">{user?.class.class}CP</span>
+                <span className="tags on">{user?.class.class}CP</span>
               )}
             </Box>
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <MdEmail
                 style={{
-                  color: "#717171",
+                  color: "#04396A",
                   fontSize: "30px",
                 }}
               />
-              <span className="tags">{user?.email}</span>
+              <span className="tags on">{user?.email}</span>
             </Box>
           </Stack>
           <Stack
@@ -187,7 +205,7 @@ const UserProfile = () => {
               mt: 4,
               pt: 4,
               pb: 2,
-              borderTop: "1px solid #DEDEDE",
+              borderTop: "1px solid rgba(153, 169, 183, 0.7)",
               width: "100%",
             }}
           >
@@ -233,13 +251,15 @@ const UserProfile = () => {
             </button>
           </Stack>
           {selectPost &&
-            posts
-              ?.filter((post) => post.user === user?.id)
-              .map((post) => <Post key={post.id} post={post} />)}
+            posts?.filter((post) => post.user === user?.id)
+              .map((post) => <Post key={`${post.id}`} post={post} author={user} />)}
           {!selectPost &&
-            user?.bookmarks.map((postId) => (
-              <PostById key={postId} postId={postId} />
-            ))}
+            user?.bookmarks.map((postId) => {
+              const post = posts?.find(p => p.id === postId)
+              const author = users?.find(u => u.id === post.user)
+              console.log(author)
+              return <Post key={`${postId}`} post={post} author={author} />
+            })}
         </Box>
       </Box>
       <Footer />

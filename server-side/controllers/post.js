@@ -4,7 +4,6 @@ const config = require("../utils/config");
 
 const postRouter = require("express").Router();
 
-
 const googleDrive = require("../utils/googleDrive");
 const multerService = require("../utils/multerService");
 const { google } = require("googleapis");
@@ -29,10 +28,10 @@ postRouter.get("/:id", (req, res, next) => {
     .catch((error) => next(error));
 });
 
-
 postRouter.post("/", multerService.upload.single("file"), async (req, res) => {
   const file = req.file;
-  const { title, description } = req.body
+  const { title, description, year, speciality, semester, module, folder } = req.body;
+  const tags = JSON.parse(req.body.tags)
   const token = req.header("Authorization").split(" ")[1];
   try {
     if (!file) {
@@ -58,8 +57,16 @@ postRouter.post("/", multerService.upload.single("file"), async (req, res) => {
     const post = new Post({
       title,
       description,
+      tags,
       user: user._id.toString(),
       url: fileUrl,
+      path: {
+        year,
+        speciality,
+        semester,
+        module,
+        folder,
+      }
     });
     const savedPost = await post.save();
     user.posts = user.posts.concat(savedPost._id.toString());
@@ -72,20 +79,15 @@ postRouter.post("/", multerService.upload.single("file"), async (req, res) => {
 });
 
 postRouter.put("/:id", async (req, res) => {
-  const body = req.body;
-  const post = {
-    title: body.title,
-    description: body.description,
-    likes: body.likes,
-    user: body.user, 
-  };
+  const post = req.body;
+  
   const updatedPost = await Post.findByIdAndUpdate(req.params.id, post, {
     new: true,
   });
   return res.json(updatedPost);
 });
 
-postRouter.put("/comment/:postId", async (req,res) => {
+postRouter.put("/comment/:postId", async (req, res) => {
   const token = req.header("Authorization").split(" ")[1];
   const body = req.body;
   const decodedToken = jwt.verify(token, config.SECRET);
@@ -93,21 +95,63 @@ postRouter.put("/comment/:postId", async (req,res) => {
   if (!decodedToken) {
     return res.status(400);
   }
-  
-  const user = await User.findById(decodedToken.id)
+
+  const user = await User.findById(decodedToken.id);
   const post = await Post.findById(postId);
-  if(!(user && post)) {
-    return res.status(404)
+  if (!(user && post)) {
+    return res.status(404);
   }
 
   const comment = {
     user: decodedToken.id,
     text: body.comment,
-  }
-  
+  };
+
   post.comments = post.comments.concat(comment);
-  await post.save()
-  return res.status(200).json(comment)
-})
+  await post.save();
+  return res.status(200).json(comment);
+});
+
+postRouter.put("/up/:postId", async (req, res) => {
+  const token = req.header("Authorization").split(" ")[1];
+  const decodedToken = jwt.verify(token, config.SECRET);
+
+  const { postId } = req.params;
+
+  if (!decodedToken) {
+    return res.status(400);
+  }
+  const post = await Post.findById(postId);
+  if (!post.up.includes(decodedToken.id)) {
+    post.up = post.up.concat(decodedToken.id);
+    if (post.down.includes(decodedToken.id)) {
+      post.down = post.down.filter((user) => user !== decodedToken.id);
+    }
+    await post.save();
+    res.status(200);
+  }
+});
+
+postRouter.put("/down/:postId", async (req, res) => {
+  const token = req.header("Authorization").split(" ")[1];
+  const decodedToken = jwt.verify(token, config.SECRET);
+
+  const { postId } = req.params;
+
+  if (!decodedToken) {
+    return res.status(400);
+  }
+
+  const post = await Post.findById(postId);
+
+  if (!post.down.includes(decodedToken.id)) {
+    post.down = post.down.concat(decodedToken.id);
+    if (post.up.includes(decodedToken.id)) {
+      post.up = post.up.filter((user) => user !== decodedToken.id);
+    }
+    await post.save();
+    res.status(200);
+  }
+});
 
 module.exports = postRouter;

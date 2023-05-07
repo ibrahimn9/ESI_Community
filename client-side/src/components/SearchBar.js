@@ -22,11 +22,12 @@ const SearchBar = () => {
       className='search-form'
       onSubmit={handleSubmit}
       sx={{
-        borderRadius: 2,
+        borderRadius: 6,
         pl: 2,
         display: {xs: 'none', sm: 'flex'},
         alignItems: 'center',
         boxShadow: "none",
+        fontFamily: 'Urbanist',
         mr: { sm: 5 },
       }}
     >

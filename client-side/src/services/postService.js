@@ -31,10 +31,28 @@ const addComment = async (id, token, comment) =>{
     })
 }
 
+const addUp = async(postId, token) => {
+    return axios.put(`${baseUrl}/up/${postId}`, null,  {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        },
+    })
+}
+
+const addDown = async(postId, token) => {
+    return axios.put(`${baseUrl}/down/${postId}`, null,  {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        },
+    })
+}
+
 export default {
     getAll,
     getOne,
     updatePost,
     createPost,
     addComment,
+    addUp,
+    addDown,
 }

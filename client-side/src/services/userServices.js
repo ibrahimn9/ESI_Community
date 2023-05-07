@@ -6,6 +6,10 @@ const getOne = async (id) => {
     return await axios.get(`${baseUrl}/${id}`)
 }
 
+const getAll = async() => {
+    return await axios.get(`${baseUrl}`)
+}
+
 const verifyEmail = async(email) => {
     return await axios.post(`${baseUrl}/verify-email?email=${encodeURIComponent(email)}`)
 }
@@ -23,6 +27,10 @@ const sendEmail = async(bodyReq) => {
 }
 const confirmEmail = async(bodyReq) => {
     return await axios.post(`${baseUrl}/confirm_code`, bodyReq)
+}
+
+const updateUser = async(user) => {
+    return await axios.put(`${baseUrl}/${user.id}`, user)
 }
 
 const createNewUser = async (user) => {
@@ -74,6 +82,11 @@ const sendUnmark = async (id, token) => {
     })
 }
 
+const sendMessage = async (message, emails) => {
+    const { data } = await axios.post(`${baseUrl}/send-message`, { message, emails })
+    return data
+}
+
 
 export default {
     verifyEmail,
@@ -84,9 +97,12 @@ export default {
     createNewUser,
     login,
     getOne,
+    getAll,
     sendToken,
     sendFollow,
     sendUnfollow,
     sendMark,
     sendUnmark,
+    sendMessage,
+    updateUser,
 }

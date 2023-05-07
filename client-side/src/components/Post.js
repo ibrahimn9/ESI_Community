@@ -5,73 +5,117 @@ import { images } from "../constants";
 import { BiCommentDetail } from "react-icons/bi";
 import { BsCaretDown, BsCaretUp } from "react-icons/bs";
 import { BsBookmark } from "react-icons/bs";
+
+import { useDispatch, useSelector } from "react-redux";
+import { updatePost } from "../reducers/postReducer";
+import { createUser } from "../reducers/userReducer";
+
 import postService from "../services/postService";
 import userServices from "../services/userServices";
 
-const Post = ({ post }) => {
-  const { title, description, user } = post;
-  const [userObj, setUserObj] = useState();
+const Post = ({ post, author }) => {
+  const { title, user, tags } = post;
   const [likes, setLikes] = useState();
   const [votedUp, setVotedUp] = useState(false);
   const [votedDown, setVotedDown] = useState(false);
-  const [updatedUser, setUpdatedUser] = useState();
-  const [mark, setMark] = useState(false)
+  const [mark, setMark] = useState(false);
+  const [currUser, setCurrUser] = useState({});
+
   const loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"));
+
   const navigate = useNavigate();
- 
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    userServices.getOne(user).then(({ data }) => setUserObj(data));
-    setLikes(post.likes)
-    isMarked()
-  }, []);
-
-  const isMarked = async() => {
-    const { data } = await userServices.getOne(loggedUser.id)
-    if(data.bookmarks.includes(post.id)) {
-      setMark(true)
+  const isUpOrDown = () => {
+    if (post.up.includes(loggedUser.id)) {
+      setVotedUp(true);
+      setVotedDown(false);
     }
-  }
+    if (post.down.includes(loggedUser.id)) {
+      setVotedDown(true);
+      setVotedUp(false);
+    }
+  };
+
+  const isMarked = async () => {
+    const { data } = await userServices.getOne(loggedUser.id);
+    setCurrUser(data);
+    if (data.bookmarks.includes(post.id)) {
+      setMark(true);
+    }
+  };
 
   const handleUpClick = async () => {
-    const { data } = await postService.updatePost({
-      ...post,
-      likes: likes + 1,
-    });
-    setLikes(data.likes);
     setVotedUp(true);
     setVotedDown(false);
+    setLikes(post.likes + 1);
+    const updatedPost = {
+      ...post,
+      likes: likes + 1,
+      up: post.up.concat(loggedUser.id),
+      down: post.down.filter((u) => u !== loggedUser.id),
+    };
+
+    dispatch(updatePost(updatedPost));
+
+    const { data } = await postService.updatePost(updatedPost);
   };
 
   const handleDownClick = async () => {
-    const { data } = await postService.updatePost({
-      ...post,
-      likes: likes - 1,
-    });
-    setLikes(data.likes);
     setVotedDown(true);
     setVotedUp(false);
+    setLikes(post.likes - 1);
+    const updatedPost = {
+      ...post,
+      likes: likes - 1,
+      down: post.down.concat(loggedUser.id),
+      up: post.up.filter((u) => u !== loggedUser.id),
+    };
+
+    dispatch(updatePost(updatedPost));
+
+    const { data } = await postService.updatePost(updatedPost);
   };
 
   const handleMarkClick = async () => {
-    if(!mark){
-    const { data } = await userServices.sendMark(post.id, loggedUser.token);
-    setMark(true);
-    }
-    else {
-      const { data } = await userServices.sendUnmark(post.id, loggedUser.token);
-      setMark(false);
-    }    
-  }
+    if (!mark) {
+      const updatedUser = {
+        ...currUser,
+        bookmarks: currUser.bookmarks?.concat(post.id),
+      };
 
+      setCurrUser(updatedUser);
+      const { response } = await userServices.updateUser(updatedUser);
+      setMark(true);
+    } else {
+      const updatedUser = {
+        ...currUser,
+        bookmarks: currUser.bookmarks?.filter((p) => p !== post.id),
+      };
+
+      dispatch(createUser(updatedUser));
+      const { response } = await userServices.updateUser(updatedUser);
+      setMark(false);
+    }
+  };
 
   const handleProfileClick = () => {
-    navigate(`/user_profile/${userObj.id}`)
+    navigate(`/user_profile/${author.id}`);
   };
 
   const handlePostClick = () => {
-    navigate(`/post_detail/${post.id}`)
+    navigate(`/post_detail/${post.id}`);
+  };
+
+  const handleCommentClick = () => {
+    navigate(`/post_detail/${post.id}#comments`);
   }
+
+  useEffect(() => {
+    setLikes(post.likes);
+    isUpOrDown();
+    isMarked();
+  }, []);
 
   return (
     <Box
@@ -79,7 +123,8 @@ const Post = ({ post }) => {
         background: "#FFFFFF",
         height: "auto",
         borderRadius: 2,
-        border: "1px solid #DEDEDE",
+        border: "1px solid #E8E8EA",
+        boxShadow: "5px 5px  10px #E8E8EA",
         mt: 2,
         p: 2,
       }}
@@ -87,8 +132,8 @@ const Post = ({ post }) => {
       <Stack direction="row" sx={{ alignItems: "center" }}>
         <img
           src={
-            userObj?.pic
-              ? `https://drive.google.com/uc?export=view&id=${userObj?.pic}`
+            author?.pic
+              ? `https://drive.google.com/uc?export=view&id=${author?.pic}`
               : images.defaultUserPic
           }
           style={{
@@ -96,46 +141,61 @@ const Post = ({ post }) => {
             width: "50px",
             borderRadius: "50%",
             display: "inline",
-            marginRight: '5px',
-            border: "1px solid #DEDEDE",
+            marginRight: "5px",
+            border: "2px solid rgba(153, 169, 183, 0.7)",
+            objectFit: "cover",
           }}
         />
         <Stack direction="column" sx={{ justifyContent: "center" }}>
-          <button className="profile-link post-link btn" onClick={handleProfileClick}>
-            {userObj?.name}
+          <button
+            className="profile-link post-link btn"
+            onClick={handleProfileClick}
+          >
+            {author?.name}
           </button>
           <label className="post-link post-label">Mars 10 2 days ago</label>
         </Stack>
       </Stack>
-      <Box sx={{ ml: 7 }}>
-        <h3 className="post-title" onClick={handlePostClick}>{title}</h3>
-      </Box>
       <Stack
         direction="row"
-        sx={{ alignItems: "center", ml: 7, flexWrap: "wrap" }}
+        sx={{ alignItems: "center", ml: 7, mt: 4, flexWrap: "wrap" }}
       >
-        <span className="tags">#analyse</span>
-        <span className="tags">#math</span>
-        <span className="tags">#2cp</span>
-        <span className="tags">#serie_numerique</span>
+        {tags?.map((tag) => (
+          <span className="tags post-tags" key={`${post.id}/${tag}`}>
+            {tag}
+          </span>
+        ))}
       </Stack>
+      <Box sx={{ ml: 7 }}>
+        <h3 className="post-title" onClick={handlePostClick}>
+          {title}
+        </h3>
+      </Box>
       <Stack direction="row" sx={{ justifyContent: "space-between" }}>
         <Box>
           <Stack
             direction="column"
             sx={{ alignItems: "center", justifyContent: "center" }}
           >
-            <button className="inter-btn" onClick={handleUpClick} disabled={votedUp}>
+            <button
+              className="inter-btn"
+              onClick={handleUpClick}
+              disabled={votedUp}
+            >
               <BsCaretUp style={{ marginBottom: "-10px" }} />
             </button>
             <span className="post-static">{likes}</span>
-            <button className="inter-btn" onClick={handleDownClick} disabled={votedDown}>
+            <button
+              className="inter-btn"
+              onClick={handleDownClick}
+              disabled={votedDown}
+            >
               <BsCaretDown style={{ marginTop: "-15px" }} />
             </button>
           </Stack>
         </Box>
         <Stack direction="row" sx={{ alignItems: "center", ml: 1 }}>
-          <button className="inter-btn">
+          <button className="inter-btn" onClick={handleCommentClick}>
             <BiCommentDetail
               style={{
                 display: "flex",
@@ -146,7 +206,10 @@ const Post = ({ post }) => {
           </button>
           <span className="tags">add comment</span>
         </Stack>
-        <button className={mark ? 'inter-btn marked': 'inter-btn'} onClick={handleMarkClick}>
+        <button
+          className={mark ? "inter-btn marked" : "inter-btn"}
+          onClick={handleMarkClick}
+        >
           <BsBookmark style={{ fontSize: "24px" }} />
         </button>
       </Stack>

@@ -17,14 +17,17 @@ import { Comment } from "../components";
 
 const PostDetail = () => {
   const { id } = useParams();
+
   const [post, setPost] = useState();
   const [likes, setLikes] = useState();
   const [user, setUser] = useState();
+
   const [votedUp, setVotedUp] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
   const [votedDown, setVotedDown] = useState(false);
   const [toggle, setToggle] = useState(false);
   const [comment, setComment] = useState();
+  const [comments, setComments] = useState([])
   const [mark, setMark] = useState(false);
   const loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"));
   const navigate = useNavigate();
@@ -39,6 +42,7 @@ const PostDetail = () => {
     const res = await userServices.getOne(data.user);
     const response = await userServices.getOne(loggedUser.id);
     setPost(data);
+    setComments(data.comments)
     setUser(res.data);
     setLikes(data.likes);
     if (response.data?.bookmarks.includes(id)) {
@@ -47,10 +51,24 @@ const PostDetail = () => {
     if (res.data?.folowing.includes(loggedUser.id)) {
       setIsFollowing(true);
     }
+    console.log(data);
+    if (data?.up.includes(loggedUser.id)) {
+      setVotedUp(true);
+      setVotedDown(false);
+    }
+    if (data?.down.includes(loggedUser.id)) {
+      setVotedDown(true);
+      setVotedUp(false);
+    }
   };
 
   useEffect(() => {
     getPostAndUser();
+    if (window.location.hash === '#comments') {
+      commentsRef.current.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      window.scrollTo(0, 0);
+    }
   }, []);
 
   const handleMarkClick = async () => {
@@ -64,23 +82,27 @@ const PostDetail = () => {
   };
 
   const handleUpClick = async () => {
+    setLikes(post.likes + 1);
+    setVotedUp(true);
+    setVotedDown(false);
     const { data } = await postService.updatePost({
       ...post,
       likes: likes + 1,
+      up: post.up.concat(loggedUser.id),
+      down: post.down.filter((u) => u !== loggedUser.id),
     });
-    setLikes(data.likes);
-    setVotedUp(true);
-    setVotedDown(false);
   };
 
   const handleDownClick = async () => {
+    setLikes(post.likes - 1);
+    setVotedDown(true);
+    setVotedUp(false);
     const { data } = await postService.updatePost({
       ...post,
       likes: likes - 1,
+      down: post.down.concat(loggedUser.id),
+      up: post.up.filter((u) => u !== loggedUser.id),
     });
-    setLikes(data.likes);
-    setVotedDown(true);
-    setVotedUp(false);
   };
 
   const handleProfileClick = () => {
@@ -112,12 +134,17 @@ const PostDetail = () => {
     const { data } = await postService.addComment(post?.id, loggedUser.token, {
       comment,
     });
+    const newComment = {
+      user: loggedUser.id,
+      text: comment,
+    }
+    setComments(comments.concat(newComment))
     setToggle(false);
     setComment("");
   };
 
   return (
-    <Box sx={{ background: "#F5F5F5", height: "auto" }}>
+    <Box sx={{ background: "#EDF1F2", height: "auto" }}>
       <NavBar />
       <Stack
         direction="row"
@@ -189,7 +216,7 @@ const PostDetail = () => {
             mt: 4,
             borderRadius: 2,
             p: 4,
-            border: "1px solid #DEDEDE",
+            border: "1px solid rgba(153, 169, 183, 0.7)",
             flexGrow: "1",
             height: "",
           }}
@@ -207,7 +234,8 @@ const PostDetail = () => {
                 borderRadius: "50%",
                 display: "inline",
                 marginRight: "5px",
-                border: "1px solid #DEDEDE",
+                border: "2px solid rgba(153, 169, 183, 0.7)",
+                objectFit: "cover",
               }}
             />
             <Stack direction="column" sx={{ justifyContent: "center" }}>
@@ -220,15 +248,18 @@ const PostDetail = () => {
               <label className="post-link post-label">Mars 10 2 days ago</label>
             </Stack>
           </Stack>
-          <h1 style={{ fontWeight: "900", fontSize: "52px" }}>{post?.title}</h1>
+          <h1 style={{ fontWeight: "900", fontSize: "52px", color: "#04396A" }}>
+            {post?.title}
+          </h1>
           <Stack
             direction="row"
             sx={{ alignItems: "center", flexWrap: "wrap" }}
           >
-            <span className="tags">#analyse</span>
-            <span className="tags">#math</span>
-            <span className="tags">#2cp</span>
-            <span className="tags">#serie_numerique</span>
+            {post?.tags?.map((tag) => (
+              <span className="tags post-tags" key={`${post.id}/${tag}`}>
+                {tag}
+              </span>
+            ))}
           </Stack>
           <p style={{ color: "#3f3f3f", fontSize: "22px" }}>
             {post?.description}
@@ -259,9 +290,10 @@ const PostDetail = () => {
               mt: 6,
               pt: 6,
             }}
+            ref={commentsRef}
           >
-            <Box sx={{ width: "100%" }} ref={commentsRef}>
-              <h1>Comments</h1>
+            <Box sx={{ width: "100%" }}>
+              <h1 style={{ color: "#04396a" }}>Comments</h1>
               <Stack
                 direction="row"
                 sx={{ width: "100%", justifyContent: "center" }}
@@ -278,12 +310,13 @@ const PostDetail = () => {
                     borderRadius: "50%",
                     display: "inline",
                     marginRight: "5px",
-                    border: "1px solid #DEDEDE",
+                    border: "2px solid rgba(153, 169, 183, 0.7)",
                   }}
                 />
                 <textarea
                   className="cmnt"
                   placeholder="Add to the discussion"
+                  value={comment}
                   onFocus={() => setToggle(true)}
                   onChange={handleCommentChange}
                 />
@@ -298,7 +331,7 @@ const PostDetail = () => {
                   Submit
                 </button>
               )}
-              {post?.comments.map((comment) => (
+              {comments?.map((comment) => (
                 <Comment
                   key={`${comment.user}/${comment.text}`}
                   user={comment.user}
@@ -316,7 +349,7 @@ const PostDetail = () => {
             mt: 4,
             borderRadius: 2,
             p: 2,
-            border: "1px solid #DEDEDE",
+            border: "1px solid rgba(153, 169, 183, 0.7)",
             display: { xs: "none", md: "flex" },
             flexDirection: "column",
             alignItems: "center",
@@ -336,7 +369,7 @@ const PostDetail = () => {
                 borderRadius: "50%",
                 display: "inline",
                 marginRight: "5px",
-                border: "1px solid #DEDEDE",
+                border: "p2x solid rgba(153, 169, 183, 0.7)",
               }}
             />
             <Stack direction="column" sx={{ justifyContent: "center" }}>
@@ -409,7 +442,7 @@ const PostDetail = () => {
               flexWrap: "wrap",
               mt: 1,
               p: 2,
-              borderTop: "1px solid #DEDEDE",
+              borderTop: "1px solid rgba(153, 169, 183, 0.7)",
               width: "100%",
             }}
           >
