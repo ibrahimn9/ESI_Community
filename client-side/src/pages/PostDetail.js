@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
 import Footer from "../containers/Home/Footer";
 import { Comment } from "../components";
+import { userBadge } from "../constants/userBadge";
 
 const PostDetail = () => {
   const { id } = useParams();
@@ -21,13 +22,14 @@ const PostDetail = () => {
   const [post, setPost] = useState();
   const [likes, setLikes] = useState();
   const [user, setUser] = useState();
+  const [currUser, setCurrUser] = useState();
 
   const [votedUp, setVotedUp] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
   const [votedDown, setVotedDown] = useState(false);
   const [toggle, setToggle] = useState(false);
   const [comment, setComment] = useState();
-  const [comments, setComments] = useState([])
+  const [comments, setComments] = useState([]);
   const [mark, setMark] = useState(false);
   const loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"));
   const navigate = useNavigate();
@@ -42,16 +44,17 @@ const PostDetail = () => {
     const res = await userServices.getOne(data.user);
     const response = await userServices.getOne(loggedUser.id);
     setPost(data);
-    setComments(data.comments)
+    setComments(data.comments);
     setUser(res.data);
     setLikes(data.likes);
+    setCurrUser(response.data);
     if (response.data?.bookmarks.includes(id)) {
       setMark(true);
     }
     if (res.data?.folowing.includes(loggedUser.id)) {
       setIsFollowing(true);
     }
-    console.log(data);
+
     if (data?.up.includes(loggedUser.id)) {
       setVotedUp(true);
       setVotedDown(false);
@@ -64,8 +67,8 @@ const PostDetail = () => {
 
   useEffect(() => {
     getPostAndUser();
-    if (window.location.hash === '#comments') {
-      commentsRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (window.location.hash === "#comments") {
+      commentsRef.current.scrollIntoView({ behavior: "smooth" });
     } else {
       window.scrollTo(0, 0);
     }
@@ -73,11 +76,23 @@ const PostDetail = () => {
 
   const handleMarkClick = async () => {
     if (!mark) {
-      const { data } = await userServices.sendMark(id, loggedUser.token);
       setMark(true);
+      const { data } = await userServices.sendMark(id, loggedUser.token);
+      if (user.id !== currUser.id) {
+        const { res } = await userServices.updateUser({
+          ...user,
+          points: user.points + 10,
+        });
+      }
     } else {
-      const { data } = await userServices.sendUnmark(id, loggedUser.token);
       setMark(false);
+      const { data } = await userServices.sendUnmark(id, loggedUser.token);
+      if (user.id !== currUser.id) {
+        const { res } = await userServices.updateUser({
+          ...user,
+          points: user.points - 10,
+        });
+      }
     }
   };
 
@@ -91,6 +106,10 @@ const PostDetail = () => {
       up: post.up.concat(loggedUser.id),
       down: post.down.filter((u) => u !== loggedUser.id),
     });
+    const { res } = await userServices.updateUser({
+      ...user,
+      points: user.points + 5, 
+    })
   };
 
   const handleDownClick = async () => {
@@ -103,6 +122,11 @@ const PostDetail = () => {
       down: post.down.concat(loggedUser.id),
       up: post.up.filter((u) => u !== loggedUser.id),
     });
+
+    const { res } = await userServices.updateUser({
+      ...user,
+      points: user.points - 5, 
+    })
   };
 
   const handleProfileClick = () => {
@@ -131,16 +155,25 @@ const PostDetail = () => {
   };
 
   const handleAddComment = async () => {
-    const { data } = await postService.addComment(post?.id, loggedUser.token, {
-      comment,
-    });
     const newComment = {
       user: loggedUser.id,
       text: comment,
-    }
-    setComments(comments.concat(newComment))
+    };
+    setComments(comments.concat(newComment));
     setToggle(false);
     setComment("");
+    const { data } = await postService.addComment(post?.id, loggedUser.token, {
+      comment,
+    });
+    const { res } = await userServices.updateUser({
+      ...user,
+      points: user.points + 1, 
+    })
+    const { response } = await userServices.updateUser({
+      ...currUser,
+      points: currUser.points + 1, 
+    })
+    
   };
 
   return (
@@ -152,6 +185,7 @@ const PostDetail = () => {
           mx: { xs: 4, lg: 15 },
           positon: "relative",
           mb: 4,
+          justifyContent: { xs: "center", md: "" },
         }}
       >
         <Box
@@ -222,22 +256,25 @@ const PostDetail = () => {
           }}
         >
           <Stack direction="row" sx={{ alignItems: "center" }}>
-            <img
-              src={
-                user?.pic
-                  ? `https://drive.google.com/uc?export=view&id=${user?.pic}`
-                  : images.defaultUserPic
-              }
-              style={{
-                height: "50px",
-                width: "50px",
-                borderRadius: "50%",
-                display: "inline",
-                marginRight: "5px",
-                border: "2px solid rgba(153, 169, 183, 0.7)",
-                objectFit: "cover",
-              }}
-            />
+            <Box sx={{ position: "relative" }}>
+              <img
+                src={
+                  user?.pic
+                    ? `https://drive.google.com/uc?export=view&id=${user?.pic}`
+                    : images.defaultUserPic
+                }
+                style={{
+                  height: "50px",
+                  width: "50px",
+                  borderRadius: "50%",
+                  display: "inline",
+                  marginRight: "5px",
+                  border: "2px solid rgba(153, 169, 183, 0.7)",
+                  objectFit: "cover",
+                }}
+              />
+              <img src={userBadge(user?.points)} className="badge" />
+            </Box>
             <Stack direction="column" sx={{ justifyContent: "center" }}>
               <button
                 className="profile-link post-link btn"
@@ -300,8 +337,8 @@ const PostDetail = () => {
               >
                 <img
                   src={
-                    user?.pic
-                      ? `https://drive.google.com/uc?export=view&id=${user?.pic}`
+                    currUser?.pic
+                      ? `https://drive.google.com/uc?export=view&id=${currUser?.pic}`
                       : images.defaultUserPic
                   }
                   style={{
@@ -357,21 +394,24 @@ const PostDetail = () => {
           }}
         >
           <Stack direction="row" sx={{ alignItems: "center" }}>
-            <img
-              src={
-                user?.pic
-                  ? `https://drive.google.com/uc?export=view&id=${user?.pic}`
-                  : images.defaultUserPic
-              }
-              style={{
-                height: "50px",
-                width: "50px",
-                borderRadius: "50%",
-                display: "inline",
-                marginRight: "5px",
-                border: "p2x solid rgba(153, 169, 183, 0.7)",
-              }}
-            />
+            <Box sx={{ position: "relative" }}>
+              <img
+                src={
+                  user?.pic
+                    ? `https://drive.google.com/uc?export=view&id=${user?.pic}`
+                    : images.defaultUserPic
+                }
+                style={{
+                  height: "50px",
+                  width: "50px",
+                  borderRadius: "50%",
+                  display: "inline",
+                  marginRight: "5px",
+                  border: "p2x solid rgba(153, 169, 183, 0.7)",
+                }}
+              />
+              <img src={userBadge(user?.points)} className="badge" />
+            </Box>
             <Stack direction="column" sx={{ justifyContent: "center" }}>
               <button
                 className="profile-link post-link btn"

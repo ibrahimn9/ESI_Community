@@ -8,6 +8,8 @@ const googleDrive = require("../utils/googleDrive");
 const multerService = require("../utils/multerService");
 const { google } = require("googleapis");
 
+const upload = require('../utils/upload_file_to_folder');
+
 const Post = require("../models/post");
 const User = require("../models/user");
 
@@ -153,5 +155,36 @@ postRouter.put("/down/:postId", async (req, res) => {
     res.status(200);
   }
 });
+
+const authenticateGoogle = () => {
+  const auth = new google.auth.GoogleAuth({
+      keyFile: `../googlek.json`,
+      scopes: "https://www.googleapis.com/auth/drive",
+  });
+  return auth;
+};
+
+
+postRouter.post('/upload', async (req, res, next) => {
+  const classInput = req.body.classInput;
+  const fileUrl = req.body.fileUrl;
+  const semestere = req.body.semestere;
+  const type=req.body.type
+  const module=req.body.module
+
+
+  try {
+      const auth = authenticateGoogle();
+      const folderId = await upload.find_folder_by_name(classInput,semestere,module,type,auth);
+      upload.uploadFileToDrive(fileUrl, folderId, auth);
+      res.send('roh')
+  } catch (err) {
+      res.status(500).send('Error uploading file to Google Drive');
+  }
+});
+
+
+
+
 
 module.exports = postRouter;

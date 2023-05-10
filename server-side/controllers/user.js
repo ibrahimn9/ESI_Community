@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
 const validator = require("../utils/validator");
 const jwt = require("jsonwebtoken");
-const config = require("../utils/config")
+const config = require("../utils/config");
 
 const googleDrive = require("../utils/googleDrive");
 const multerService = require("../utils/multerService");
@@ -12,10 +12,10 @@ const userRouter = require("express").Router();
 const User = require("../models/user");
 const Post = require("../models/post");
 
-userRouter.get('/', async(req, res) => {
+userRouter.get("/", async (req, res) => {
   const users = await User.find({});
   return res.json(users.map((user) => user.toJSON()));
-})
+});
 
 userRouter.get("/:id", (req, res, next) => {
   User.findById(req.params.id)
@@ -30,7 +30,15 @@ userRouter.get("/:id", (req, res, next) => {
 });
 
 userRouter.delete("/:id", (req, res, next) => {
-  Person.findByIdAndRemove(req.params.id)
+
+  const token = req.header("Authorization").split(" ")[1];
+
+  const decodedToken = jwt.verify(token, config.SECRET);
+  if (!decodedToken) {
+    return res.status(400);
+  }
+
+  Person.findByIdAndRemove(decodedToken.id)
     .then((result) => {
       res.status(204).end();
     })
@@ -49,17 +57,15 @@ userRouter.post("/", multerService.upload.single("file"), async (req, res) => {
   multerService.deleteFile(file.path);
   const fileId = response.id;
   const driveService = google.drive({ version: "v3", auth });
-    const fileMetadata = await driveService.files.get({
-      fileId: fileId,
-      fields: "webViewLink",
-    });
+  const fileMetadata = await driveService.files.get({
+    fileId: fileId,
+    fields: "webViewLink",
+  });
   const fileUrl = fileMetadata.data.webViewLink;
   const pic = fileUrl.match(/\/d\/(.+?)\/view/)[1];
 
   const saltRounds = 10;
   const passwordHash = await bcrypt.hash(body.password, saltRounds);
-
- 
 
   const user = new User({
     name: body.name,
@@ -68,6 +74,74 @@ userRouter.post("/", multerService.upload.single("file"), async (req, res) => {
     class: body.class,
     pic,
   });
+
+  const savedUser = await user.save();
+  res.json(savedUser);
+});
+
+userRouter.post(
+  "/update_profile",
+  multerService.upload.single("file"),
+  async (req, res) => {
+    const body = req.body;
+    const file = req.file;
+    const token = req.header("Authorization").split(" ")[1];
+
+    const decodedToken = jwt.verify(token, config.SECRET);
+    if (!decodedToken) {
+      return res.status(400);
+    }
+
+    const user = await User.findById(decodedToken.id);
+
+    let pic;
+
+    if (file) {
+      const auth = googleDrive.authenticateGoogle();
+      const response = await googleDrive.uploadToGoogleDrive(file, auth);
+      multerService.deleteFile(file.path);
+      const fileId = response.id;
+      const driveService = google.drive({ version: "v3", auth });
+      const fileMetadata = await driveService.files.get({
+        fileId: fileId,
+        fields: "webViewLink",
+      });
+      const fileUrl = fileMetadata.data.webViewLink;
+      pic = fileUrl.match(/\/d\/(.+?)\/view/)[1];
+    }
+
+    user.name = body.name || user.name;
+    user.pic = pic || user.pic;
+    user.brandColor = body.brandColor || user.brandColor;
+    user.bio = body.bio || user.bio;
+
+    const savedUser = await user.save();
+    res.json(savedUser);
+  }
+);
+
+userRouter.post("/update_password", async (req, res) => {
+  const body = req.body;
+  const token = req.header("Authorization").split(" ")[1];
+
+  const decodedToken = jwt.verify(token, config.SECRET);
+  if (!decodedToken) {
+    return res.status(400);
+  }
+  const user = await User.findById(decodedToken.id);
+
+  const passwordCorrect = await bcrypt.compare(body.currPassword, user.passwordHash);
+
+  if (! passwordCorrect ) {
+    return res.json({
+      error: "invalid password",
+    });
+  }
+
+  const saltRounds = 10;
+  const passwordHash = await bcrypt.hash(body.password, saltRounds);
+
+  user.passwordHash = passwordHash 
 
   const savedUser = await user.save();
   res.json(savedUser);
@@ -163,30 +237,30 @@ userRouter.post("/verify-token", (req, res) => {
   }
 });
 
-userRouter.put("/follow/:userId", async (req,res) => {
+userRouter.put("/follow/:userId", async (req, res) => {
   const token = req.header("Authorization").split(" ")[1];
   const decodedToken = jwt.verify(token, config.SECRET);
   const { userId } = req.params;
   if (!decodedToken) {
     return res.status(400);
   }
-  
+
   const user = await User.findById(decodedToken.id);
   const userToFollow = await User.findById(userId);
-  if(!(user && userToFollow)) {
-    return res.status(404)
+  if (!(user && userToFollow)) {
+    return res.status(404);
   }
 
   user.folowing = user.folowing.concat(userId);
   userToFollow.folowers = userToFollow.folowers.concat(decodedToken.id);
-  
-  await user.save()
-  await userToFollow.save()
 
-  return res.status(200).json({ message: 'Followed user successfully' })
-})
+  await user.save();
+  await userToFollow.save();
 
-userRouter.put('/unfollow/:userId', async (req, res) => {
+  return res.status(200).json({ message: "Followed user successfully" });
+});
+
+userRouter.put("/unfollow/:userId", async (req, res) => {
   const { userId } = req.params;
   const token = req.header("Authorization").split(" ")[1];
   const decodedToken = jwt.verify(token, config.SECRET);
@@ -197,27 +271,26 @@ userRouter.put('/unfollow/:userId', async (req, res) => {
 
   try {
     const user = await User.findById(userId);
-    const unfollower = await User.findById(decodedToken.id)
+    const unfollower = await User.findById(decodedToken.id);
     user.folowers = user.folowers.filter(
       (followerId) => followerId !== decodedToken.id
     );
 
     unfollower.folowing = unfollower.folowing.filter(
       (followingId) => followingId !== userId
-    )
+    );
 
     await user.save();
     await unfollower.save();
 
-    res.status(200).json({ message: 'Unfollowed user successfully' });
+    res.status(200).json({ message: "Unfollowed user successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
-
-userRouter.put('/mark/:postId', async (req, res) => {
+userRouter.put("/mark/:postId", async (req, res) => {
   const token = req.header("Authorization").split(" ")[1];
   const decodedToken = jwt.verify(token, config.SECRET);
 
@@ -231,14 +304,14 @@ userRouter.put('/mark/:postId', async (req, res) => {
     const user = await User.findById(decodedToken.id);
     user.bookmarks = user.bookmarks.concat(postId);
     await user.save();
-    res.status(200).json({ message: 'marked post successfully' });
+    res.status(200).json({ message: "marked post successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
-userRouter.put('/unmark/:postId', async (req, res) => {
+userRouter.put("/unmark/:postId", async (req, res) => {
   const token = req.header("Authorization").split(" ")[1];
   const decodedToken = jwt.verify(token, config.SECRET);
 
@@ -252,18 +325,17 @@ userRouter.put('/unmark/:postId', async (req, res) => {
     const user = await User.findById(decodedToken.id);
     user.bookmarks = user.bookmarks.filter((post) => post !== postId);
     await user.save();
-    res.status(200).json({ message: 'marked post successfully' });
+    res.status(200).json({ message: "marked post successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
-userRouter.post('/send-message', (req, res) => {
-  const { message, emails } = req.body
-  validator.sendMessage(message, emails)
-  res.status(200).json({ message: 'message sent successfully' });
-})
-
+userRouter.post("/send-message", (req, res) => {
+  const { message, emails } = req.body;
+  validator.sendMessage(message, emails);
+  res.status(200).json({ message: "message sent successfully" });
+});
 
 module.exports = userRouter;

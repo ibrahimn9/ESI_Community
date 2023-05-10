@@ -1,11 +1,19 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Box, Stack } from "@mui/material";
 import { images } from "../../constants";
 import { rankEnum } from "../../constants/rankEnum";
+import { userBadge } from "../../constants/userBadge";
 
 const UserDetail = ({ user, rank }) => {
   const { e, c } = rankEnum(rank);
+  const navigate = useNavigate();
+
+  const handleProfileClick = () => {
+    navigate(`/user_profile/${user.id}`);
+  };
+
   return (
     <Box
       sx={{
@@ -26,22 +34,25 @@ const UserDetail = ({ user, rank }) => {
         {rank}
         {e}
       </h4>
-      <img
-        src={
-          user?.pic
-            ? `https://drive.google.com/uc?export=view&id=${user?.pic}`
-            : images.defaultUserPic
-        }
-        style={{
-          height: "50px",
-          width: "50px",
-          borderRadius: "50%",
-          display: "inline",
-          marginRight: "5px",
-          border: `2px solid ${c}`,
-          objectFit: 'cover',
-        }}
-      />
+      <Box sx={{ position: "relative" }}>
+        <img
+          src={
+            user?.pic
+              ? `https://drive.google.com/uc?export=view&id=${user?.pic}`
+              : images.defaultUserPic
+          }
+          style={{
+            height: "50px",
+            width: "50px",
+            borderRadius: "50%",
+            display: "inline",
+            marginRight: "5px",
+            border: `2px solid ${c}`,
+            objectFit: "cover",
+          }}
+        />
+        <img src={userBadge(user.points)} className="badge" />
+      </Box>
       <Box
         sx={{
           display: "flex",
@@ -49,7 +60,12 @@ const UserDetail = ({ user, rank }) => {
           ml: 2,
         }}
       >
-        <h3 style={{ margin: "0", color: "#04396A" }}>{user.name}</h3>
+        <h3
+          style={{ margin: "0", color: "#04396A", cursor: "pointer" }}
+          onClick={handleProfileClick}
+        >
+          {user.name}
+        </h3>
         <h3 style={{ margin: "0", color: "#3C87F0" }}>{user.points}</h3>
       </Box>
     </Box>

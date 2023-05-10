@@ -13,49 +13,56 @@ import postService from "../services/postService";
 import { Footer } from "../containers/Home";
 
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
+import { userBadge } from "../constants/userBadge";
 
 import { Post, PostById } from "../components";
 
 const UserProfile = () => {
   const [user, setUser] = useState();
   const [isFollowing, setIsFollowing] = useState(false);
-  const [posts, setPosts] = useState([])
-  const [users, setUsers] = useState([])
+  const [posts, setPosts] = useState([]);
+  const [users, setUsers] = useState([]);
   const [selectPost, setSelectPost] = useState(true);
   const { id } = useParams();
   const loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"));
-  const loggedId = loggedUser.id;
-
+  const loggedId = loggedUser.id; 
+  const selectedColor = user?.brandColor || '#000000'
 
   const getUser = async () => {
-      const { data } = await userServices.getOne(id);
-      setUser(data);
-      if (data.folowers.includes(loggedId)) {
-        setIsFollowing(true);
-      }
+    const { data } = await userServices.getOne(id);
+    setUser(data);
+    if (data.folowers.includes(loggedId)) {
+      setIsFollowing(true);
+    }
   };
 
-  const getUsers = async() => {
+  const getUsers = async () => {
     const { data } = await userServices.getAll();
     setUsers(data);
-  }
+  };
 
-
-  const getPosts = async() => {
+  const getPosts = async () => {
     const posts = await postService.getAll();
-    setPosts(posts)
-  }
-
+    setPosts(posts);
+  };
 
   const handleFollow = async () => {
-    const { data   } = await userServices.sendFollow(id, loggedUser.token);
     setIsFollowing(true);
+    const { res } = await userServices.updateUser({
+      ...user,
+      points: user.points + 15,
+    });
+    const { data } = await userServices.sendFollow(id, loggedUser.token);
   };
 
   const handleUnfollow = async () => {
-    const { data } = await userServices.sendUnfollow(id, loggedUser.token);
     setIsFollowing(false);
+    const { res } = await userServices.updateUser({
+      ...user,
+      points: user.points - 15,
+    });
+    const { data } = await userServices.sendUnfollow(id, loggedUser.token);
   };
 
   useEffect(() => {
@@ -63,8 +70,6 @@ const UserProfile = () => {
     getUsers();
     getPosts();
   }, []);
-
- 
 
   return (
     <Box sx={{ background: "#EDF1F2", height: "auto" }}>
@@ -78,7 +83,7 @@ const UserProfile = () => {
           mb: 4,
         }}
       >
-        <Box sx={{ background: "#000000", height: "140px", width: "100%" }} />
+        <Box sx={{ background: selectedColor, height: "140px", width: "100%" }} />
         <Box
           sx={{
             background: "#FDFDFD",
@@ -94,14 +99,15 @@ const UserProfile = () => {
             alignItems: "center",
           }}
         >
-          <img
-            src={
-              user?.pic
-                ? `https://drive.google.com/uc?export=view&id=${user?.pic}`
-                : images.defaultUserPic
-            }
-            className="profile-pic"
-          />
+            <img
+              src={
+                user?.pic
+                  ? `https://drive.google.com/uc?export=view&id=${user?.pic}`
+                  : images.defaultUserPic
+              }
+              className="profile-pic"
+              style={{ border: `10px solid ${selectedColor}`}}
+            />
           {loggedId !== id && !isFollowing && (
             <button
               style={{
@@ -121,7 +127,7 @@ const UserProfile = () => {
                 position: "absolute",
                 right: "5%",
                 margin: 0,
-                background: '#F2C344'
+                background: "#F2C344",
               }}
               className="post-btn btn"
             >
@@ -144,16 +150,14 @@ const UserProfile = () => {
           <h1
             style={{
               fontWeight: "900",
-              color: '#04396A'
+              color: "#04396A",
             }}
             className="mt"
           >
             {user?.name}
           </h1>
           <p style={{ textAlign: "center", margin: "0 30px" }}>
-            Hi, I'm Ibra! I'm a front-end developer and student at computer
-            science school ESI ex INI, and the main languages in my tech stack
-            are JavaScript, React, and HTML/CSS. I’m a lifelong learner.
+            {user?.bio}
           </p>
           <Stack
             direction="row"
@@ -251,14 +255,16 @@ const UserProfile = () => {
             </button>
           </Stack>
           {selectPost &&
-            posts?.filter((post) => post.user === user?.id)
-              .map((post) => <Post key={`${post.id}`} post={post} author={user} />)}
+            posts
+              ?.filter((post) => post.user === user?.id)
+              .map((post) => (
+                <Post key={`${post.id}`} post={post} author={user} />
+              ))}
           {!selectPost &&
             user?.bookmarks.map((postId) => {
-              const post = posts?.find(p => p.id === postId)
-              const author = users?.find(u => u.id === post.user)
-              console.log(author)
-              return <Post key={`${postId}`} post={post} author={author} />
+              const post = posts?.find((p) => p.id === postId);
+              const author = users?.find((u) => u.id === post.user);
+              return <Post key={`${postId}`} post={post} author={author} />;
             })}
         </Box>
       </Box>

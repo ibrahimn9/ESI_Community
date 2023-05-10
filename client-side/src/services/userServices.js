@@ -87,6 +87,30 @@ const sendMessage = async (message, emails) => {
     return data
 }
 
+const updateProfile = async(user, token) => {
+    return axios.post(`${baseUrl}/update_profile`, user, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        },
+    })
+}
+
+const updatePassword = async(user, token) => {
+    return axios.post(`${baseUrl}/update_password`, user, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        },
+    })
+}
+
+const deleteUser = async(token) => {
+    return axios.delete(`${baseUrl}`, null, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        },
+    })
+}
+
 
 export default {
     verifyEmail,
@@ -105,4 +129,7 @@ export default {
     sendUnmark,
     sendMessage,
     updateUser,
+    updateProfile,
+    updatePassword,
+    deleteUser,
 }

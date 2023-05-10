@@ -32,10 +32,9 @@ const UserHome = () => {
     dispatch(fetchPosts(posts));
   }
   
-  const handleLogout = () => {
-    window.localStorage.clear()
-    navigate('/auth/login');
-  }
+ 
+
+
 
 
 

@@ -564,6 +564,10 @@ a {
   transition: 0.2s;
 }
 
+.post-btn:disabled {
+  cursor: not-allowed;
+}
+
 .post-btn:hover {
   opacity: 0.8;
 }
@@ -673,7 +677,7 @@ a {
 }
 
 .cat {
-  color: #97A6B4;
+  color: #97a6b4;
 }
 
 .active-cat {
@@ -685,11 +689,27 @@ a {
   );
   padding: 10px 14px;
   border-radius: 20px;
-  color: #04396A;
+  color: #04396a;
+}
+
+.toggle-cat {
+  padding: 12px 28px;
+  border-radius: 20px;
+  transition: .2s ease-in;
+}
+
+.toggle-cat:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(60, 135, 240, 0.27) 0%,
+    rgba(60, 135, 240, 0.229206) 22.67%,
+    rgba(60, 135, 240, 0.0729) 109.53%
+  );
+  color: #04396a;
 }
 
 .active-icon svg {
-  color: #04396A;
+  color: #04396a;
 }
 
 .sch-box {
@@ -697,7 +717,7 @@ a {
   align-items: center;
   width: 50%;
   justify-content: space-around;
-  border: 2px solid #E8E8EA;
+  border: 2px solid #e8e8ea;
   border-radius: 20px;
   color: rgba(4, 57, 106, 1);
   padding: 12px 5px;
@@ -707,10 +727,10 @@ a {
 
 .sch-box h3 {
   margin: 0;
-} 
+}
 
 .select-input {
-  border: 1px solid #97A6B4;
+  border: 1px solid #97a6b4;
   border-radius: 10px;
   margin-top: 10px;
   padding: 10px 16px;
@@ -719,11 +739,44 @@ a {
 }
 
 .select-input:focus {
-  border: 2px solid #3C87F0BF;
+  border: 2px solid #3c87f0bf;
 }
 
-.select-input option:active {
-  background: red;
+.badge {
+  position: absolute;
+  bottom: 0;
+  right: 5px;
+  height: 20px;
+  width: 20px;
+}
+
+.badge--bg {
+  height: 40px;
+  width: 40px;
+}
+
+.badge--nv {
+  right: -5px;
+  height: 25px;
+  width: 25px;
+}
+
+.input-tags {
+  border: none;
+  border: 1px solid #97A6B4;
+  outline: none;
+  border-radius: 5px;
+  padding: 8px 16px;
+}
+
+.input-tags:focus {
+  border: 2px solid #3c87f0bf;
+}
+
+.input-tags::placeholder {
+  color: #97A6B4;
+  font-family: 'Urbanist';
+  font-size: 16px;
 }
 
 /*--------------extra small----------------*/

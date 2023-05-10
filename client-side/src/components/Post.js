@@ -9,17 +9,20 @@ import { BsBookmark } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { updatePost } from "../reducers/postReducer";
 import { createUser } from "../reducers/userReducer";
+import { userBadge } from "../constants/userBadge";
 
 import postService from "../services/postService";
 import userServices from "../services/userServices";
 
 const Post = ({ post, author }) => {
-  const { title, user, tags } = post;
+  const { title, user, tags, createdAt } = post;
   const [likes, setLikes] = useState();
   const [votedUp, setVotedUp] = useState(false);
   const [votedDown, setVotedDown] = useState(false);
   const [mark, setMark] = useState(false);
   const [currUser, setCurrUser] = useState({});
+
+  const daysAgo = Math.round((new Date() - new Date(createdAt)) / (1000 * 60 * 60 * 24))
 
   const loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"));
 
@@ -59,6 +62,11 @@ const Post = ({ post, author }) => {
     dispatch(updatePost(updatedPost));
 
     const { data } = await postService.updatePost(updatedPost);
+
+    const { res } = await userServices.updateUser({
+      ...author,
+      points: author.points + 5,
+    });
   };
 
   const handleDownClick = async () => {
@@ -75,10 +83,16 @@ const Post = ({ post, author }) => {
     dispatch(updatePost(updatedPost));
 
     const { data } = await postService.updatePost(updatedPost);
+
+    const { res } = await userServices.updateUser({
+      ...author,
+      points: author.points - 5,
+    });
   };
 
   const handleMarkClick = async () => {
     if (!mark) {
+      setMark(true);
       const updatedUser = {
         ...currUser,
         bookmarks: currUser.bookmarks?.concat(post.id),
@@ -86,8 +100,14 @@ const Post = ({ post, author }) => {
 
       setCurrUser(updatedUser);
       const { response } = await userServices.updateUser(updatedUser);
-      setMark(true);
+      if (author.id !== currUser.id) {
+        const { res } = await userServices.updateUser({
+          ...author,
+          points: author.points + 10,
+        });
+      }
     } else {
+      setMark(false);
       const updatedUser = {
         ...currUser,
         bookmarks: currUser.bookmarks?.filter((p) => p !== post.id),
@@ -95,7 +115,12 @@ const Post = ({ post, author }) => {
 
       dispatch(createUser(updatedUser));
       const { response } = await userServices.updateUser(updatedUser);
-      setMark(false);
+      if (author.id !== currUser.id) {
+        const { res } = await userServices.updateUser({
+          ...author,
+          points: author.points - 10,
+        });
+      }
     }
   };
 
@@ -109,7 +134,7 @@ const Post = ({ post, author }) => {
 
   const handleCommentClick = () => {
     navigate(`/post_detail/${post.id}#comments`);
-  }
+  };
 
   useEffect(() => {
     setLikes(post.likes);
@@ -130,22 +155,25 @@ const Post = ({ post, author }) => {
       }}
     >
       <Stack direction="row" sx={{ alignItems: "center" }}>
-        <img
-          src={
-            author?.pic
-              ? `https://drive.google.com/uc?export=view&id=${author?.pic}`
-              : images.defaultUserPic
-          }
-          style={{
-            height: "50px",
-            width: "50px",
-            borderRadius: "50%",
-            display: "inline",
-            marginRight: "5px",
-            border: "2px solid rgba(153, 169, 183, 0.7)",
-            objectFit: "cover",
-          }}
-        />
+        <Box sx={{ position: "relative" }}>
+          <img
+            src={
+              author?.pic
+                ? `https://drive.google.com/uc?export=view&id=${author?.pic}`
+                : images.defaultUserPic
+            }
+            style={{
+              height: "50px",
+              width: "50px",
+              borderRadius: "50%",
+              display: "inline",
+              marginRight: "5px",
+              border: "2px solid rgba(153, 169, 183, 0.7)",
+              objectFit: "cover",
+            }}
+          />
+          <img src={userBadge(author?.points)} className="badge" />
+        </Box>
         <Stack direction="column" sx={{ justifyContent: "center" }}>
           <button
             className="profile-link post-link btn"
@@ -153,7 +181,7 @@ const Post = ({ post, author }) => {
           >
             {author?.name}
           </button>
-          <label className="post-link post-label">Mars 10 2 days ago</label>
+          <label className="post-link post-label">{daysAgo} days ago</label>
         </Stack>
       </Stack>
       <Stack

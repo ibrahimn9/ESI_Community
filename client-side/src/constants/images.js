@@ -18,6 +18,9 @@ import upgrade from "../assets/upgrade.png";
 import logo from "../assets/logo.svg"
 import ellipse from "../assets/ellipse.svg"
 import defaultUserPic from "../assets/defaultuserpic.jpg"
+import highBadge from "../assets/highBadge.svg"
+import medBadge from "../assets/medBadge.svg"
+import lowBadge from "../assets/lowBadge.svg"
 
 export default {
   esialg,
@@ -40,4 +43,7 @@ export default {
   logo,
   ellipse,
   defaultUserPic,
+  highBadge,
+  medBadge,
+  lowBadge,
 };

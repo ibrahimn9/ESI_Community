@@ -4,9 +4,9 @@ const mongoose = require("mongoose");
 
 
 const userSchema = new mongoose.Schema({
-  name: { type: String, minLenght: 5, required: true },
-  email: { type: String, minLenght: 10, required: true },
-  passwordHash: { type: String, minLenght: 8, required: true },
+  name: { type: String, minLenght: 5, },
+  email: { type: String, minLenght: 10, },
+  passwordHash: { type: String, minLenght: 8, },
   class: { class: Number, specialty: String },
   pic: String,
   points: Number,
@@ -14,6 +14,8 @@ const userSchema = new mongoose.Schema({
   folowing: [String],
   bookmarks: [String],
   posts: [String],
+  bio: String,
+  brandColor: String,
 });
 
 userSchema.set("toJSON", {

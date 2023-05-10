@@ -13,6 +13,7 @@ const CreatePost = () => {
   const [file, setFile] = useState();
   const [user, setUser] = useState();
   const [emails, setEmails] = useState();
+  const [isLoading, setIsLoading] = useState(false)
   const loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"));
 
   const [year, setYear] = useState("");
@@ -53,7 +54,10 @@ const CreatePost = () => {
     setFile(formData);
   };
 
+
+
   const handlePublish = async () => {
+    setIsLoading(true)
     const { token } = JSON.parse(window.localStorage.getItem("loggedUser"));
     file.append("title", title);
     file.append("description", description);
@@ -64,6 +68,7 @@ const CreatePost = () => {
     file.append("module", module);
     file.append("folder", folder);
     const { data } = await postService.createPost(file, token);
+
     setYear("")
     setSemester("")
     setTitle("")
@@ -73,6 +78,11 @@ const CreatePost = () => {
     setModule("")
     setSpeciality("")
     setFolder("")
+    const { res } = await userServices.updateUser({
+      ...user,
+      points: user.points + 5, 
+    })
+    if(res && data ) { setIsLoading(false)}
     const message = {
       subject: `${user?.name.toUpperCase()} posted a new document`,
       text: `<p>Hi</p>
@@ -272,9 +282,10 @@ const CreatePost = () => {
           </p>
         </Box>
       </Stack>
-      <button className="post-btn btn" type="submit" onClick={handlePublish}>
+      <button className="post-btn btn" type="submit" onClick={handlePublish} disabled={isLoading}>
         Publish
       </button>
+      {isLoading && <span>loading ...</span>}
       <Footer />
     </Box>
   );

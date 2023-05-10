@@ -3,6 +3,7 @@ import userServices from "../services/userServices";
 import { images } from "../constants";
 import { Box, Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { userBadge } from "../constants/userBadge";
 
 const Comment = ({ user, text }) => {
   const [userObj, setUserObj] = useState();
@@ -24,23 +25,28 @@ const Comment = ({ user, text }) => {
   return (
     <Stack
       direction="row"
-      sx={{ width: "100%", justifyContent: "center", mt: 4 }}
+      sx={{ width: "100%", justifyContent: { xs: 'space-between', md: 'space-around'}, mt: 4 }}
     >
-      <img
-        src={
-          userObj?.pic
-            ? `https://drive.google.com/uc?export=view&id=${userObj?.pic}`
-            : images.defaultUserPic
-        }
-        style={{
-          height: "45px",
-          width: "45px",
-          borderRadius: "50%",
-          display: "inline",
-          marginRight: "5px",
-          border: "1px solid #DEDEDE",
-        }}
-      />
+      <Box sx={{ position: 'relative', left: '0' }}>
+        <Box sx={{ position: "absolute" }}>
+          <img
+            src={
+              userObj?.pic
+                ? `https://drive.google.com/uc?export=view&id=${userObj?.pic}`
+                : images.defaultUserPic
+            }
+            style={{
+              height: "45px",
+              width: "45px",
+              borderRadius: "50%",
+              display: "inline",
+              marginRight: "5px",
+              border: "1px solid #DEDEDE",
+            }}
+          />
+          <img src={userBadge(userObj?.points)} className="badge" />
+        </Box>
+      </Box>
       <Box
         sx={{
           flexBasis: "78%",
