@@ -54,6 +54,16 @@ const UserProfile = () => {
       points: user.points + 15,
     });
     const { data } = await userServices.sendFollow(id, loggedUser.token);
+
+    const notification = {
+      userId: loggedUser.id,
+      text: `You reseived a follow !, you got <span className='b'>+15 XP</span> for that`,
+    };
+    const  resp  = await userServices.addNotification(
+      notification,
+      loggedUser.token,
+      user.id
+    );
   };
 
   const handleUnfollow = async () => {
@@ -185,7 +195,7 @@ const UserProfile = () => {
                 }}
               />
               {user?.class.class > 2 ? (
-                <span className="tags on">{user?.class.class}CS</span>
+                <span className="tags on">{user?.class.class - 2}CS</span>
               ) : (
                 <span className="tags on">{user?.class.class}CP</span>
               )}

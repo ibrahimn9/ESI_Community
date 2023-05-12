@@ -9,43 +9,39 @@ import { FaDatabase } from "react-icons/fa";
 import { FaUserAlt } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { FaChevronRight } from "react-icons/fa";
-import { useNavigate, Link } from "react-router-dom";
+import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
-const Menu = () => {
+const XsMenu = ({ moveX, setMoveX }) => {
   const [selectedCategory, setSelectedCategory] = useState("Latest");
-  const navigate = useNavigate()
-  const loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"));
+  const menuRef = useRef(null);
 
-  const handleProfileClick = (name) => {
-    let link;
-    if(name === 'Profile') {
-      link = `/user_profile/${loggedUser.id}`;
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMoveX("-450px");
+      }
     }
-    else {
-      link = '/settings';
-    }
-    navigate(link)
-    setSelectedCategory(name)
-  };
-
-  const handleHomeClick = (name) => {
-    if(name === 'Database') {
-      window.open('https://drive.google.com/drive/folders/181SZoGqQjao9ItNZhtzqtewMtkqRJnl9?usp=share_link', '_blank');
-    }
-    else {
-      setSelectedCategory(name)
-    }
-  }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuRef]);
 
   return (
     <Box
       sx={{
-        flexBasis: "30%",
-        position: "sticky",
-        height: "",
-        display: { xs: "none", md: "flex" },
+        width: "400px",
+        position: "absolute",
+        height: "200vh",
+        display: { xs: "flex", md: "none" },
+        zIndex: "100",
         justifyContent: "center",
+        top: 0,
+        left: moveX || "-450px",
+        transition: ".3s ease-in-out",
       }}
+      ref={menuRef}
     >
       <Box
         sx={{
@@ -53,8 +49,6 @@ const Menu = () => {
           boxShadow: "5px 5px  10px #E8E8EA",
           width: "60%",
           background: "#FDFDFD",
-          borderRadius: "10px",
-          mt: 2,
           p: 4,
           display: "flex",
           flexDirection: "column",
@@ -70,7 +64,10 @@ const Menu = () => {
                 mb: 3,
                 cursor: "pointer",
               }}
-              onClick={() => handleHomeClick(cat.name)}
+              onClick={() => {
+                setSelectedCategory(`${cat.name}`);
+                setMoveX("-450px");
+              }}
               className={selectedCategory === cat.name ? "active-cat" : "cat"}
               key={cat.name}
             >
@@ -93,7 +90,10 @@ const Menu = () => {
                 mb: 3,
                 cursor: "pointer",
               }}
-              onClick={() => handleProfileClick(cat.name)}
+              onClick={() => {
+                setSelectedCategory(`${cat.name}`);
+                setMoveX("-450px");
+              }}
               className={selectedCategory === cat.name ? "active-cat" : "cat"}
               key={cat.name}
             >
@@ -122,40 +122,40 @@ const Menu = () => {
             href="https://drive.google.com/drive/u/2/folders/1AwpbDyoHdmSLYjaUfIqVh3FSH_tQ1yvi"
             target="_blank"
           >
-            <Box className="sch-box">
-              <h3>2CP</h3>
-              <FaChevronRight />
-            </Box>
+          <Box className="sch-box">
+            <h3>2CP</h3>
+            <FaChevronRight />
+          </Box>
           </a>
 
           <a
             href="https://drive.google.com/drive/u/2/folders/1bQ2wua8EWD2yTjFvh8gNhwZ78Bf9Qq_h"
             target="_blank"
           >
-            <Box className="sch-box">
-              <h3>1CS</h3>
-              <FaChevronRight />
-            </Box>
+          <Box className="sch-box">
+            <h3>1CS</h3>
+            <FaChevronRight />
+          </Box>
           </a>
 
           <a
             href="https://drive.google.com/drive/u/2/folders/1uKYdGDqzpDaDRYDX13_CO5eKVCITSFRr"
             target="_blank"
           >
-            <Box className="sch-box">
-              <h3>2CS</h3>
-              <FaChevronRight />
-            </Box>
+          <Box className="sch-box">
+            <h3>2CS</h3>
+            <FaChevronRight />
+          </Box>
           </a>
 
           <a
             href="https://drive.google.com/drive/u/2/folders/1oleGZ6tHG51P-YbUGgL6Mqfu9JghaHCT"
             target="_blank"
           >
-            <Box className="sch-box">
-              <h3>3CS</h3>
-              <FaChevronRight />
-            </Box>
+          <Box className="sch-box">
+            <h3>3CS</h3>
+            <FaChevronRight />
+          </Box>
           </a>
         </Box>
       </Box>
@@ -163,4 +163,4 @@ const Menu = () => {
   );
 };
 
-export default Menu;
+export default XsMenu;

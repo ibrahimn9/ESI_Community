@@ -414,6 +414,22 @@ a {
   transition: 0.3s;
 }
 
+.nos-btn svg {
+  position: relative;
+}
+
+.nos-btn svg::before {
+  position: absolute;
+  display: block;
+  width: 5px;
+  height: 5px;
+  top: 0;
+  right: 0;
+  background: red;
+}
+
+
+
 .nos-btn:hover {
   color: #1640ac;
 }
@@ -779,11 +795,20 @@ a {
   font-size: 16px;
 }
 
+.loading {
+  margin-left: 15px;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+
+
 /*--------------extra small----------------*/
 @media screen and (max-width: 600px) {
-  .navtxt-btn {
-    display: none;
-  }
   .header-input {
     font-size: 32px;
   }
@@ -890,6 +915,21 @@ a {
 
   .mt {
     margin-top: 60px;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 16px;
+    width: '100%';
+  }
+
+  .navtxt-btn {
+    display: none;
+  }
+  .ds {
+    display: block;
   }
 }
 
@@ -1013,4 +1053,9 @@ a {
     right: 0;
     opacity: 1;
   }
+}
+
+
+.b span {
+  color: #1640ac;
 }

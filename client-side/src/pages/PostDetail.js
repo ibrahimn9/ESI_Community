@@ -35,6 +35,8 @@ const PostDetail = () => {
   const navigate = useNavigate();
   const commentsRef = useRef(null);
 
+  const daysAgo = Math.round((new Date() - new Date(post?.createdAt)) / (1000 * 60 * 60 * 24))
+
   const handleCommentButtonClick = () => {
     commentsRef.current.scrollIntoView({ behavior: "smooth" });
   };
@@ -84,6 +86,17 @@ const PostDetail = () => {
           points: user.points + 10,
         });
       }
+
+      const notification = {
+        postId: post?.id,
+        text: `Your post <span className='b'>${post.title}</span> was bookmarked by another user!, you got <span className='b'>+10 XP</span> for that`,
+      };
+      const  resp  = await userServices.addNotification(
+        notification,
+        loggedUser.token,
+        user.id
+      );
+
     } else {
       setMark(false);
       const { data } = await userServices.sendUnmark(id, loggedUser.token);
@@ -106,10 +119,20 @@ const PostDetail = () => {
       up: post.up.concat(loggedUser.id),
       down: post.down.filter((u) => u !== loggedUser.id),
     });
-    const { res } = await userServices.updateUser({
+    const  res  = await userServices.updateUser({
       ...user,
-      points: user.points + 5, 
+      points: user.points + 3, 
     })
+
+    const notification = {
+      postId: post?.id,
+      text: `you received an upvote on your post <span className='b'>${post.title}</span>!, you got <span className='b'>+3 XP</span> for that`,
+    };
+    const resp = await userServices.addNotification(
+      notification,
+      loggedUser.token,
+      user.id
+    );
   };
 
   const handleDownClick = async () => {
@@ -125,7 +148,7 @@ const PostDetail = () => {
 
     const { res } = await userServices.updateUser({
       ...user,
-      points: user.points - 5, 
+      points: user.points - 3, 
     })
   };
 
@@ -282,7 +305,7 @@ const PostDetail = () => {
               >
                 {user?.name}
               </button>
-              <label className="post-link post-label">Mars 10 2 days ago</label>
+              <label className="post-link post-label">{daysAgo} days ago</label>
             </Stack>
           </Stack>
           <h1 style={{ fontWeight: "900", fontSize: "52px", color: "#04396A" }}>

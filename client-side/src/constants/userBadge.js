@@ -2,14 +2,13 @@ import images from "./images"
 
 
 export const userBadge = (pts) => {
-    if(pts < 50) {
+    if(pts < 100) {
         return images.lowBadge
     }
-    else if (pts >= 50 && pts < 500) {
+    else if (pts >= 100 && pts < 1000) {
         return images.medBadge
     }
-    else if( pts >= 500) {
+    else if( pts >= 1000) {
         return images.highBadge
     }
-
 }

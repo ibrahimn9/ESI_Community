@@ -10,12 +10,26 @@ import { ChromePicker } from "react-color";
 import createValidationMessage from "../constants/createValidationMessage";
 
 import { Footer } from "../containers/Home";
+import { useRef } from "react";
 
 const Settings = () => {
   const loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"));
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [user, setUser] = useState({});
   const [toggle, setToggle] = useState(false);
+  const colorRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (colorRef.current && !colorRef.current.contains(event.target)) {
+        setToggle(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [colorRef]);
 
   const [selectedColor, setSelectedColor] = useState("#000000");
   const [name, setName] = useState("");
@@ -63,11 +77,11 @@ const Settings = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-  }
+    e.preventDefault();
+  };
 
   const handlePasswordUpdate = async () => {
-    setError('')
+    setError("");
     const res = await userServices.updatePassword(
       { password, currPassword },
       loggedUser.token
@@ -78,10 +92,10 @@ const Settings = () => {
   };
 
   const handleDelete = async () => {
-    const { data } = await userServices.deleteUser(loggedUser.token)
-    window.localStorage.clear()
-    navigate('/auth/login');
-  }
+    const { data } = await userServices.deleteUser(loggedUser.token);
+    window.localStorage.clear();
+    navigate("/auth/login");
+  };
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
@@ -95,7 +109,7 @@ const Settings = () => {
     setUser(data);
     setBio(data.bio);
     setName(data.name);
-    setSelectedColor(data.brandColor);
+    setSelectedColor(data.brandColor || '#000000');
   };
 
   useEffect(() => {
@@ -194,7 +208,10 @@ const Settings = () => {
                 onClick={() => setToggle(!toggle)}
               >
                 {toggle && (
-                  <Box style={{ position: "absolute", top: "120%" }}>
+                  <Box
+                    sx={{ position: "absolute", top: "120%" }}
+                    ref={colorRef}
+                  >
                     <ChromePicker
                       color={selectedColor}
                       onChange={(color) => setSelectedColor(color.hex)}

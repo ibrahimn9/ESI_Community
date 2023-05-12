@@ -5,17 +5,31 @@ import UserDetail from "./UserDetail";
 import userServices from "../../services/userServices";
 
 const Ranking = () => {
-  const [users, setUsers] = useState(null);
+  const [users, setUsers] = useState([]);
+  const [topUsers, setTopUsers] = useState([]);
+  const [showUsers, setShowUsers] = useState([]);
+  const [toggle, setToggle] = useState(true);
+
   const getUsers = async () => {
     const { data } = await userServices.getAll();
     data.sort((a, b) => b.points - a.points);
     setUsers(data);
+    setTopUsers([data[0], data[1], data[2], data[3], data[4]]);
+    setShowUsers([data[0], data[1], data[2], data[3], data[4]]);
+  };
+
+  const handleShowClick = () => {
+    setToggle(!toggle);
+    if (toggle) {
+      setShowUsers(users);
+    } else {
+      setShowUsers(topUsers);
+    }
   };
 
   useEffect(() => {
     getUsers();
   }, []);
-
 
   return (
     <Box
@@ -53,14 +67,12 @@ const Ranking = () => {
           Ranking
         </h3>
         <Box sx={{ mt: 7 }} />
-        {users?.map((user, index) => (
-          <UserDetail
-            key={`${user.email}`}
-            user={user}
-            rank={index + 1}
-          />
+        {showUsers?.map((user, index) => (
+          <UserDetail key={`${user.email}`} user={user} rank={index + 1} />
         ))}
-        <button className="secondary-btn btn">Show All</button>
+        <button className="secondary-btn btn" onClick={handleShowClick}>
+          {toggle ? "Show All" : "Show less"}
+        </button>
       </Box>
     </Box>
   );

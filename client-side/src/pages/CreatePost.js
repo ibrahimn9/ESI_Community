@@ -3,7 +3,15 @@ import { Box, Stack } from "@mui/material";
 import postService from "../services/postService";
 import userServices from "../services/userServices";
 import { Footer } from "../containers/Home";
-import { years, modules, semesters, specialities, folders } from "../constants/docPath";
+import { useNavigate } from "react-router-dom";
+import {
+  years,
+  modules,
+  semesters,
+  specialities,
+  folders,
+} from "../constants/docPath";
+import { BiLoaderAlt } from "react-icons/bi";
 
 const CreatePost = () => {
   const [title, setTitle] = useState("");
@@ -13,8 +21,9 @@ const CreatePost = () => {
   const [file, setFile] = useState();
   const [user, setUser] = useState();
   const [emails, setEmails] = useState();
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   const loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"));
+  const navigate = useNavigate()
 
   const [year, setYear] = useState("");
   const [semester, setSemester] = useState("");
@@ -55,9 +64,8 @@ const CreatePost = () => {
   };
 
 
-
   const handlePublish = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     const { token } = JSON.parse(window.localStorage.getItem("loggedUser"));
     file.append("title", title);
     file.append("description", description);
@@ -68,21 +76,11 @@ const CreatePost = () => {
     file.append("module", module);
     file.append("folder", folder);
     const { data } = await postService.createPost(file, token);
-
-    setYear("")
-    setSemester("")
-    setTitle("")
-    setTags("")
-    setTagsArr("")
-    setDescription("")
-    setModule("")
-    setSpeciality("")
-    setFolder("")
+    if (data) setIsLoading(false);
     const { res } = await userServices.updateUser({
       ...user,
-      points: user.points + 5, 
-    })
-    if(res && data ) { setIsLoading(false)}
+      points: user.points + 5,
+    });
     const message = {
       subject: `${user?.name.toUpperCase()} posted a new document`,
       text: `<p>Hi</p>
@@ -94,6 +92,8 @@ const CreatePost = () => {
             <p>ESI Community</p>`,
     };
     const { response } = await userServices.sendMessage(message, emails);
+
+    navigate(`/post_detail/${data.id}`)
   };
 
   useEffect(() => {
@@ -200,13 +200,13 @@ const CreatePost = () => {
                   </select>
                 )}
                 {module && (
-                  <select 
+                  <select
                     value={folder}
                     onChange={(e) => setFolder(e.target.value)}
                     className="select-input"
                   >
                     <option value="">Select Folder</option>
-                    {folders.map(f => (
+                    {folders.map((f) => (
                       <option value={f} key={f}>
                         {f}
                       </option>
@@ -282,10 +282,16 @@ const CreatePost = () => {
           </p>
         </Box>
       </Stack>
-      <button className="post-btn btn" type="submit" onClick={handlePublish} disabled={isLoading}>
+      <button
+        className="post-btn btn"
+        type="submit"
+        onClick={handlePublish}
+        disabled={isLoading}
+        style={{ display: "flex", alignItems: "center" }}
+      >
         Publish
+        {isLoading && <BiLoaderAlt className="loading" />}
       </button>
-      {isLoading && <span>loading ...</span>}
       <Footer />
     </Box>
   );

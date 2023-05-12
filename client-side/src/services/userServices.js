@@ -111,6 +111,24 @@ const deleteUser = async(token) => {
     })
 }
 
+const deleteNotifications = async (token) => {
+    return axios.post(`${baseUrl}/deletenotifications`, null, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        },
+    })
+}
+
+const addNotification = async (notification, token, userID) => {
+    return axios.put(`${baseUrl}/add_notification/${userID}`, notification, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        },
+    })
+}
+
+
+
 
 export default {
     verifyEmail,
@@ -132,4 +150,6 @@ export default {
     updateProfile,
     updatePassword,
     deleteUser,
+    deleteNotifications,
+    addNotification,
 }

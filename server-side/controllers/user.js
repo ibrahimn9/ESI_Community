@@ -1,3 +1,4 @@
+const userRouter = require("express").Router();
 const bcrypt = require("bcrypt");
 const validator = require("../utils/validator");
 const jwt = require("jsonwebtoken");
@@ -7,7 +8,7 @@ const googleDrive = require("../utils/googleDrive");
 const multerService = require("../utils/multerService");
 const { google } = require("googleapis");
 
-const userRouter = require("express").Router();
+
 
 const User = require("../models/user");
 const Post = require("../models/post");
@@ -337,5 +338,40 @@ userRouter.post("/send-message", (req, res) => {
   validator.sendMessage(message, emails);
   res.status(200).json({ message: "message sent successfully" });
 });
+
+userRouter.post('/deletenotifications', async(req, res) => {
+  console.log('hiiiiiiiiiiiiiiiiiiii')
+  const token = req.header("Authorization").split(" ")[1];
+  const decodedToken = jwt.verify(token, config.SECRET);
+
+
+  if (!decodedToken) {
+    return res.status(400);
+  }
+
+  const user = await User.findById(decodedToken.id);
+
+  user.notifications = []
+  const savdedUser = await user.save();
+  return res.json({ message: "deleted successfully" });
+})
+
+userRouter.put('/add_notification/:id', async(req, res) => {
+  const token = req.header("Authorization").split(" ")[1];
+  const { id } = req.params 
+  const notification = req.body;
+  const decodedToken = jwt.verify(token, config.SECRET);
+
+
+  if (!decodedToken) {
+    return res.status(400);
+  }
+
+  const user = await User.findById(id);
+
+  user.notifications = user.notifications.concat(notification)
+  const savedUser = await user.save();
+  return res.json({ message: "added successfully" });
+})
 
 module.exports = userRouter;

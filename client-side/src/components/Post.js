@@ -22,7 +22,9 @@ const Post = ({ post, author }) => {
   const [mark, setMark] = useState(false);
   const [currUser, setCurrUser] = useState({});
 
-  const daysAgo = Math.round((new Date() - new Date(createdAt)) / (1000 * 60 * 60 * 24))
+  const daysAgo = Math.round(
+    (new Date() - new Date(createdAt)) / (1000 * 60 * 60 * 24)
+  );
 
   const loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"));
 
@@ -63,10 +65,19 @@ const Post = ({ post, author }) => {
 
     const { data } = await postService.updatePost(updatedPost);
 
-    const { res } = await userServices.updateUser({
+    const res = await userServices.updateUser({
       ...author,
-      points: author.points + 5,
+      points: author.points + 3,
     });
+    const notification = {
+      postId: post.id,
+      text: `you received an upvote on your post <span className='b'>${post.title}</span>!, you got <span className='b'>+3 XP</span> for that`,
+    };
+    const resp = await userServices.addNotification(
+      notification,
+      loggedUser.token,
+      author.id
+    );
   };
 
   const handleDownClick = async () => {
@@ -84,9 +95,9 @@ const Post = ({ post, author }) => {
 
     const { data } = await postService.updatePost(updatedPost);
 
-    const { res } = await userServices.updateUser({
+    const  res  = await userServices.updateUser({
       ...author,
-      points: author.points - 5,
+      points: author.points - 3,
     });
   };
 
@@ -99,13 +110,22 @@ const Post = ({ post, author }) => {
       };
 
       setCurrUser(updatedUser);
-      const { response } = await userServices.updateUser(updatedUser);
+      const  response  = await userServices.updateUser(updatedUser);
       if (author.id !== currUser.id) {
         const { res } = await userServices.updateUser({
           ...author,
           points: author.points + 10,
         });
       }
+      const notification = {
+        postId: post.id,
+        text: `Your post <span className='b'>${post.title}</span> was bookmarked by another user!, you got <span className='b'>+10 XP</span> for that`,
+      };
+      const  resp  = await userServices.addNotification(
+        notification,
+        loggedUser.token,
+        author.id
+      );
     } else {
       setMark(false);
       const updatedUser = {
