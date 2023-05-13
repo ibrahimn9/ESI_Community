@@ -21,21 +21,22 @@ const Header = () => (
             fontSize: { xs: "44px", md: "60px", lg: "70px" },
             fontWeight: "900",
             textAlign: { xs: "center", lg: "left" },
-            color: "white",
+            color: "#04396A",
             mt: 16,
             fontFamily: "Urbanist",
           }}
         >
-          Together, we can build a better place
+          <span style={{ color: "#3C87F0" }}>Together</span>, we can build a
+          better place
         </Typography>
         <Typography
           variant="h6"
           sx={{
-            color: "#EAEAEA",
+            color: "#99A9B7ED",
             fontFamily: "Urbanist",
             textAlign: { xs: "center", lg: "left" },
             fontSize: "18px",
-            fontWeight: "300",
+            fontWeight: "500",
             letterSpacing: ".1rem",
             mt: 2,
             ml: 1,
@@ -58,10 +59,8 @@ const Header = () => (
               Sign up
             </button>
           </Link>
-          <Link to="/auth/signin">
-            <button className="header-secondary-btn--xs btn">
-              Sign in
-            </button>
+          <Link to="/auth/login">
+            <button className="header-secondary-btn--xs btn">Sign in</button>
           </Link>
         </Stack>
       </Box>
@@ -71,9 +70,33 @@ const Header = () => (
         }}
         className="home_header__img"
       >
-        <img src={images.publication} alt="e" style={{width: '240px', borderRadius: '5px'}} />
-        <img src={images.upgradepub} alt=""  style={{width: '245px', borderRadius: '5px'}}/>
-        <img src={images.dbpub} alt="" style={{width: '240px', borderRadius: '5px'}}/>
+        <img
+          src={images.publication}
+          alt="e"
+          style={{
+            width: "240px",
+            borderRadius: "5px",
+            boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
+          }}
+        />
+        <img
+          src={images.upgradepub}
+          alt=""
+          style={{
+            width: "245px",
+            borderRadius: "5px",
+            boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
+          }}
+        />
+        <img
+          src={images.dbpub}
+          alt=""
+          style={{
+            width: "240px",
+            borderRadius: "5px",
+            boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
+          }}
+        />
       </Box>
     </Stack>
     <Box
@@ -84,9 +107,7 @@ const Header = () => (
         width: { xs: "84%", md: "94%", lg: "40%" },
         mt: { xs: 15, lg: 1 },
       }}
-    >
-      
-    </Box>
+    ></Box>
   </>
 );
 

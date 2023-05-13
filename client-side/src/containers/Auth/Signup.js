@@ -10,7 +10,8 @@ import { createUser } from "../../reducers/userReducer";
 
 const Signup = () => {
   const dispatch = useDispatch();
-  const newUser = useSelector((state) => state);
+  const newUser = useSelector((state) => state.user);
+
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -103,7 +104,7 @@ const Signup = () => {
         }}
       >
         <div>
-          <img src={images.logo} />
+          <img src={images.logo} height={55}/>
         </div>
         <div className="auth-msg" style={{ fontSize: "18px" }}>
           Already have an account?{" "}
@@ -118,6 +119,7 @@ const Signup = () => {
           transform: "translateX(-50%)",
           left: "50%",
           width: { xs: "80%", md: "50%" },
+          mb: 4,
         }}
       >
         <Box
@@ -125,9 +127,8 @@ const Signup = () => {
             marginTop: "100px",
             p: 4,
             borderRadius: "10px",
-            border: "1px solid  #202637",
-            background: "#1e1e1e",
-            boxShadow: "0 0 10px #121212",
+            background: "#F0F0F0",
+            boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
           }}
         >
           <form onSubmit={handleSubmit} className="auth-form">
@@ -137,7 +138,7 @@ const Signup = () => {
               direction={{ xs: "column", md: "row" }}
               sx={{ alignItems: { md: "center" } }}
             >
-              <input type="email" onChange={handleEmailChange} />
+              <input type="email" onChange={handleEmailChange} value={email} />
               <button
                 disabled={!isEmailValid}
                 onClick={() => setDisplayPassword(true)}
@@ -215,7 +216,7 @@ const Signup = () => {
         </div>
         <div
           className="auth-msg"
-          style={{ marginTop: "100px", fontWeight: "200", lineHeight: "20px" }}
+          style={{ marginTop: "100px", fontWeight: "400", lineHeight: "20px" }}
         >
           By creating an account, you agree to the{" "}
           <span className="auth-link">Terms of Service.</span> For more

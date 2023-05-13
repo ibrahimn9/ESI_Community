@@ -36,7 +36,8 @@ const EmailBar = () => {
         mt: { md: 8, lg: 4 },
         display: { xs: "none", md: "flex" },
         justifyContent: "space-between",
-        boxShadow: "0px 4px 5px #121212",
+        boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
+        backgroundColor: "#F0F0F0",
       }}
       className="email-bar"
     >

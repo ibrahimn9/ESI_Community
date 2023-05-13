@@ -27,14 +27,13 @@ const Home = () => {
     <Box
       className="home"
       sx={{
-        backgroundColor: "#1e1f24",
+        backgroundColor: "#FDFDFD",
         height: 'auto',
       }}
     >
       <NavBar />
       <Header />
       <Content />
-      <Source />
       <Footer />
     </Box>
   );

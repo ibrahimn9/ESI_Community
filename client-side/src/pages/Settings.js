@@ -205,7 +205,7 @@ const Settings = () => {
                   mr: 2,
                   position: "relative",
                 }}
-                onClick={() => setToggle(!toggle)}
+                onClick={() => setToggle(true)}
               >
                 {toggle && (
                   <Box

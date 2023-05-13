@@ -35,7 +35,7 @@ const EmailConfirmation = () => {
   return (
     <>
       <Stack sx={{ p: 4 }}>
-        <img src={images.logo} style={{ width: "60px" }} />
+        <img src={images.logo} height={80} />
       </Stack>
       <Box
         sx={{
@@ -46,9 +46,8 @@ const EmailConfirmation = () => {
           marginTop: "100px",
           p: 4,
           borderRadius: "10px",
-          border: "1px solid  #202637",
-          background: "#1e1e1e",
-          boxShadow: "0 0 10px #121212",
+          background: "#F0F0F0",
+          boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
         }}
       >
         <form

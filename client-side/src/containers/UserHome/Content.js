@@ -6,6 +6,7 @@ import postService from "../../services/postService";
 import Ranking from "./Ranking";
 import Menu from "./Menu";
 import { useNavigate } from "react-router-dom";
+import { Footer } from "../Home";
 
 const Content = () => {
   const navigate = useNavigate();
@@ -98,6 +99,7 @@ const Content = () => {
         </Box>
         <Ranking />
       </Stack>
+      <Footer />
     </Box>
   );
 };

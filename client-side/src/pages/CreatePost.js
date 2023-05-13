@@ -3,7 +3,9 @@ import { Box, Stack } from "@mui/material";
 import postService from "../services/postService";
 import userServices from "../services/userServices";
 import { Footer } from "../containers/Home";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { images } from "../constants";
+
 import {
   years,
   modules,
@@ -23,7 +25,7 @@ const CreatePost = () => {
   const [emails, setEmails] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"));
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [year, setYear] = useState("");
   const [semester, setSemester] = useState("");
@@ -63,7 +65,6 @@ const CreatePost = () => {
     setFile(formData);
   };
 
-
   const handlePublish = async () => {
     setIsLoading(true);
     const { token } = JSON.parse(window.localStorage.getItem("loggedUser"));
@@ -93,7 +94,7 @@ const CreatePost = () => {
     };
     const { response } = await userServices.sendMessage(message, emails);
 
-    navigate(`/post_detail/${data.id}`)
+    navigate(`/post_detail/${data.id}`);
   };
 
   useEffect(() => {
@@ -110,8 +111,10 @@ const CreatePost = () => {
           alignItems: "center",
         }}
       >
-        <h2 style={{ marginRight: "25px" }}>Logo</h2>
-        <h3>Create Post</h3>
+        <Link to={`/user_home/${loggedUser.id}`}>
+          <img src={images.logo} height={55} />
+        </Link>
+        <h2 style={{ marginLeft: "15px", color: "#04396a" }}>Create Post</h2>
       </Stack>
       <Stack
         direction="row"

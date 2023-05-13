@@ -17,10 +17,10 @@ const NavBar = () => {
       sx={{ top: '0', justifyContent:"space-between"}}
     >
       <Link to="/" style={{ display: "flex", alignItems: "center" }}>
-        <img src={images.logo} alt="logo" height={25} />
+        <img src={images.logo} alt="logo" height={55} />
       </Link>
       <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" }, ml: 10 }}>
-        {["security", "content", "about", "docs", "contact", "source"].map(
+        {["product", "content", "about", "support", "contact", "source"].map(
           (item) => (
             <a key={item} href={`${item}`} className="home_navbar-link">
               {item}
@@ -39,7 +39,7 @@ const NavBar = () => {
               (item) => (
                 <a key={item} href={`${item}`} className="home_navbar-link link--toggled">
                   {item}
-                </a>
+                </a>  
               )
             )}
           </Box>

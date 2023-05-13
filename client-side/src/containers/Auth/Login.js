@@ -51,17 +51,16 @@ const Login = () => {
         mt: 6,
       }}
     >
-      <img src={images.logo} />
-      <h2 style={{ color: "white" }}>Sign in to ESI Community</h2>
+      <img src={images.logo} height={80} />
+      <h2 style={{ color: "#F2AB44" }}>Sign in to ESI Community</h2>
       <Box
         sx={{
           mt: "5px",
           px: 4,
           py: 2,
           borderRadius: "10px",
-          border: "1px solid  #202637",
-          background: "#1e1e1e",
-          boxShadow: "0 0 10px #121212",
+          background: "#F0F0F0",
+          boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
           width: "100%",
         }}
       >
@@ -88,9 +87,8 @@ const Login = () => {
           px: 4,
           py: 2,
           borderRadius: "10px",
-          border: "1px solid  #202637",
-          background: "#1e1e1e",
-          boxShadow: "0 0 10px #121212",
+          background: "#F0F0F0",
+          boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
           width: "100%",
         }}
       >

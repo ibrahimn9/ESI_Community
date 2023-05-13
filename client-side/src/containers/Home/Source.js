@@ -4,7 +4,7 @@ import { TfiStar } from "react-icons/tfi";
 import { images } from "../../constants";
 
 const Source = () => (
-  <Box sx={{ background: "#FFFAFA"}}>
+  <Box>
     <Box sx={{ mx: { xs: 4, lg: 15 }}}>
       <Stack
         direction={{ xs: "column", md: "row" }}
@@ -21,7 +21,7 @@ const Source = () => (
         >
           <Typography
             variant="h3"
-            color="#1F2025"
+            color="#04396A"
             sx={{
               fontWeight: "900",
               fontSize: { xs: "28px", md: "42px", lg: "48px" },
@@ -36,7 +36,6 @@ const Source = () => (
             </Typography>
             <TfiStar />
           </Box>
-          <img src={images.github} alt="" />
         </Stack>
         <Typography
           variant="h4"
@@ -44,7 +43,7 @@ const Source = () => (
             fontSize: "26px",
             fontFamily: "Urbanist",
             fontWeight: "700",
-            color: "#205BF1",
+            color: "#3C87F0",
             mt: { xs: 5, md: 22 },
             display: 'flex',
             alignItems: 'center'
@@ -52,7 +51,7 @@ const Source = () => (
           className="github-link"
         >
           Visit source code{" "}
-          <BsArrowRight style={{ color: "#205BF1", fontSize: "28px", marginLeft: '10px' }} />
+          <BsArrowRight style={{ color: "#3C87F0", fontSize: "28px", marginLeft: '10px' }} />
         </Typography>
       </Stack>
     </Box>
