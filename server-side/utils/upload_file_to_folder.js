@@ -6,7 +6,7 @@ const { google } = require('googleapis');
 
 const authenticateGoogle = () => {
     const auth = new google.auth.GoogleAuth({
-        keyFile: `../googlek.json`,
+        keyFile: `./googlekey1.json`,
         scopes: "https://www.googleapis.com/auth/drive",
     });
     return auth;
@@ -123,5 +123,6 @@ async function find_folder_by_name(Class, Semester, Module, Type, auth) {
 
 module.exports = {
     uploadFileToDrive,
-    find_folder_by_name
+    find_folder_by_name,
+    authenticateGoogle,
 }

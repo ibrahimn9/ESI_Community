@@ -11,6 +11,13 @@ import {
   PostDetail,
   Search,
   Settings,
+  ForgetPasword,
+  EmailForPassword,
+  Admin,
+  ReportedPost,
+  AdminNotification,
+  PostsList,
+  UsersList,
 } from "./pages";
 import {
   Login,
@@ -37,6 +44,14 @@ const App = () => (
       <Route path="/post_detail/:id" element={<PostDetail />} />
       <Route path="/search/:searchTerm" element={<Search />} />
       <Route path="/settings" element={<Settings />} />
+      <Route path="/send_email" element={<EmailForPassword />} />
+      <Route path="/forget_password/:token" element={<ForgetPasword />}  />
+      <Route path="/admin/:id" element={<Admin />}  />
+      <Route path="/admin/reported_posts" element={<ReportedPost />}  />
+      <Route path="/admin/notification" element={<AdminNotification />}  />
+      <Route path="/admin/posts" element={<PostsList />}  />
+      <Route path="/admin/users" element={<UsersList />}  />
+
     </Routes>
   </BrowserRouter>
 );

@@ -14,7 +14,7 @@ const Content = () => {
 
   const state = useSelector((state) => state);
 
-  const years = ["1CP", "2CP", "1CS", "2CS", "3CS"];
+  const years = ["1CPI", "2CPI", "1CS", "2CS", "3CS"];
 
   let userZone = [];
 
@@ -26,10 +26,10 @@ const Content = () => {
     let switchedYear;
     switch (year) {
       case 1:
-        switchedYear = "1CP";
+        switchedYear = "1CPI";
         break;
       case 2:
-        switchedYear = "2CP";
+        switchedYear = "2CPI";
         break;
       case 3:
         switchedYear = "1CS";

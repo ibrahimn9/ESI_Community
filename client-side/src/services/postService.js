@@ -47,6 +47,10 @@ const addDown = async(postId, token) => {
     })
 }
 
+const insertToDataBase = async(path) => {
+    return axios.post(`${baseUrl}/upload`, path)
+}
+
 export default {
     getAll,
     getOne,
@@ -55,4 +59,5 @@ export default {
     addComment,
     addUp,
     addDown,
+    insertToDataBase,
 }

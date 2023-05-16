@@ -9,8 +9,12 @@ import { NavBar, Header, Content, Source, Footer } from "../containers/Home";
 const Home = () => {
   const navigate = useNavigate();
 
+  
   const verifyToken = async () => {
     const loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"))
+    if(loggedUser.email === 'esicommunity@gmail.com') {
+      navigate(`/admin/${loggedUser.id}`)
+    }
     const { data } = await user.sendToken(loggedUser.token) 
     const { id } = data
     navigate(`/user_home/${id}`)

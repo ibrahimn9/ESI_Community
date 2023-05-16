@@ -21,6 +21,7 @@ const CreatePost = () => {
   const [tags, setTags] = useState("");
   const [tagsArr, setTagsArr] = useState("");
   const [file, setFile] = useState();
+  const [fileSize, setFileSize] = useState();
   const [user, setUser] = useState();
   const [emails, setEmails] = useState();
   const [isLoading, setIsLoading] = useState(false);
@@ -63,6 +64,7 @@ const CreatePost = () => {
     const formData = new FormData();
     formData.append("file", file);
     setFile(formData);
+    setFileSize(file.size)
   };
 
   const handlePublish = async () => {
@@ -76,6 +78,7 @@ const CreatePost = () => {
     file.append("speciality", speciality);
     file.append("module", module);
     file.append("folder", folder);
+    file.append("fileSize", fileSize);
     const { data } = await postService.createPost(file, token);
     if (data) setIsLoading(false);
     const { res } = await userServices.updateUser({
@@ -174,7 +177,7 @@ const CreatePost = () => {
                 </option>
               ))}
             </select>
-            {(year && year === "1CP") || year === "2CP" || year === "1CS" ? (
+            {(year && year === "1CPI") || year === "2CPI" || year === "1CS" ? (
               <Box sx={{ display: "flex", flexDirection: "column" }}>
                 <select
                   value={semester}
@@ -289,7 +292,17 @@ const CreatePost = () => {
         className="post-btn btn"
         type="submit"
         onClick={handlePublish}
-        disabled={isLoading}
+        disabled={
+          isLoading ||
+          !title ||
+          !tags ||
+          !file ||
+          !description ||
+          !year ||
+          !semester ||
+          !module ||
+          !folder
+        }
         style={{ display: "flex", alignItems: "center" }}
       >
         Publish

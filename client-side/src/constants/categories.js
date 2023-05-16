@@ -13,7 +13,6 @@ const style = {
 
 export const homeCategory = [
     {name: 'Latest', icon: <MdOutlineTipsAndUpdates style={style} /> },
-    {name: 'Top', icon: <AiOutlineFire style={style} /> },
     {name: 'Database', icon: <FaDatabase style={style} /> },
 ]
 

@@ -27,6 +27,7 @@ const UserProfile = () => {
   const { id } = useParams();
   const loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"));
   const loggedId = loggedUser.id; 
+  const navigate = useNavigate()
   const selectedColor = user?.brandColor || '#000000'
 
   const getUser = async () => {
@@ -79,7 +80,7 @@ const UserProfile = () => {
     getUser();
     getUsers();
     getPosts();
-  }, []);
+  }, [id]);
 
   return (
     <Box sx={{ background: "#EDF1F2", height: "auto" }}>
@@ -140,6 +141,7 @@ const UserProfile = () => {
                 background: "#F2C344",
               }}
               className="post-btn btn"
+              onClick={() => navigate('/settings')}
             >
               Edit profile
             </button>

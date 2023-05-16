@@ -1,14 +1,14 @@
-export const years = ["1CP", "2CP", "1CS", "2CS", "3CS"];
+export const years = ["1CPI", "2CPI", "1CS", "2CS", "3CS"];
 
-export const semesters = ["s1", "s2"];
+export const semesters = ["S1", "S2"];
 
 export const specialities = ["SIW", "ISI"];
 
 export const folders = ["Autres", "Books", "Cours", "EMD", "EXO", "TD"];
 
 export const modules = {
-  "1CP": {
-    s1: [
+  "1CPI": {
+    S1: [
       "Algèbre 1",
       "Algorithmique et structures de données statiques",
       "Analyse Mathématique 1",
@@ -18,7 +18,7 @@ export const modules = {
       "Introduction au Système d’exploitation 1",
       "TEE",
     ],
-    s2: [
+    S2: [
       "Algèbre 2",
       "Algorithmique et structures de données dynamiques",
       "Analyse Mathématique 2",
@@ -29,8 +29,8 @@ export const modules = {
       "TEO",
     ],
   },
-  "2CP": {
-    s1: [
+  "2CPI": {
+    S1: [
       "Algèbre 3",
       "Analyse Mathématique 3",
       "Anglais",
@@ -40,7 +40,7 @@ export const modules = {
       "Economie d'entreprise",
       "Architecture des ordinateura 2",
     ],
-    s2: [
+    S2: [
       "Analyse Mathématique 4",
       "Anglais",
       "Système d’Information",
@@ -51,7 +51,7 @@ export const modules = {
     ],
   },
   "1CS": {
-    s1: [
+    S1: [
       "Système d'Exploitation 1",
       "Réseaux 1",
       "Introduction au Génie Logiciel",
@@ -61,7 +61,7 @@ export const modules = {
       "Recherche Opérationnelle",
       "Langue Anglaise 1",
     ],
-    s2: [
+    S2: [
       "Système d'Exploitation 2",
       "Réseaux 2",
       "Architectures Évoluées des Ordinateurs",
@@ -73,7 +73,7 @@ export const modules = {
   },
   "2CS": {
     SIW: {
-      s1: [
+      S1: [
         "Base de données avancées 1",
         "Technologies et développement web 1",
         "Méthodes de conception avancées",
@@ -86,7 +86,7 @@ export const modules = {
         "Réseau avancées",
         "Analyse et conception des Algorithmes Avancés",
       ],
-      s2: [
+      S2: [
         "Technologies et développement web 2",
         "Technologies et développement mobile",
         "Intergiciels et services",
@@ -96,7 +96,7 @@ export const modules = {
       ]
     },
     ISI: {
-      s1: [
+      S1: [
         "Systèmes embraqués 1",
         "Réseaux avancés",
         "Bases de données avancées",
@@ -105,7 +105,7 @@ export const modules = {
         "Ingénierie de Connaissances",
         "Stage Pratique en Entreprise",
       ],
-      s2 : [
+      S2 : [
         "Systèmes répartis",
         "Sécurité des systèmes et des Réseaux",
         "Systèmes embarqués 2",
@@ -117,7 +117,7 @@ export const modules = {
   },
   "3CS": {
     SIW: {
-        s1: [
+        S1: [
             "Bases de données Avancées 2",
             "Apprentissage Automatique et Fouille de données",
             "Internet des Objets",
@@ -126,10 +126,10 @@ export const modules = {
             "Entreprenariat et éthique professionnelle",
             "Système d'information Géographique",
         ],
-        s2: []
+        S2: []
     },
     ISI: {
-        s1: [
+        S1: [
             "Internet des objets",
             "Cloud Computing",
             "IA Avancée",
@@ -138,7 +138,7 @@ export const modules = {
             "Système d'information Géographique",
             "Entreprenariat et éthique professionnelle"
         ],
-        s2: []
+        S2: []
     }
   }
 };

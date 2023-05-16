@@ -17,7 +17,9 @@ const postSchema = new mongoose.Schema(
       semester: String,
       module: String,
       folder: String,
-    }
+    },
+    fileSize: Number,
+    inserted: { Boolean, default: false },
   },
   { timestamps: true }
 );

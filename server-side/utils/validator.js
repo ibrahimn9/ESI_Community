@@ -2,6 +2,7 @@ const emailValidator = require("email-validator");
 const passwordValidator = require("password-validator");
 const nodemailer = require("nodemailer");
 const User = require("../models/user");
+const uuid = require('uuid');
 
 const verifyEmail = async (email) => {
   const isValid = emailValidator.validate(email);
@@ -87,10 +88,41 @@ const sendMessage = (message, emails) => {
   })
 }
 
+const forgetPassword = async (email) => {
+  const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+          user: "esicommunity23@gmail.com",
+          pass: "xcesyhotluaghkct",
+      },
+  });
+  
+  const token = uuid.v4(); 
+  const mailOption = {
+      from: "esicommunity23@gmail.com",
+      to: email,
+      subject: "Change password for ESI-Community ",
+      html: `<h2> ESI-Community </h2>
+              <h1> Reset password </h1>
+              <p>A password change has been requested for your account. If this was you, please use the </br>
+              link below to reset your password </p>
+              <a href="http://localhost:3000/forget_password/${token}">Reset Password</a>`
+  };
+  transporter.sendMail(mailOption, (err, info) => {
+      if (err) {
+          console.log(err);
+      } else {
+          console.log("res" + info.response);
+      }
+  });
+  return token
+}
+
 module.exports = {
   verifyEmail,
   verifyPassword,
   verifyUsername,
   confirmCode,
   sendMessage,
+  forgetPassword,
 };

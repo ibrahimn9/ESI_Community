@@ -78,6 +78,24 @@ const Post = ({ post, author }) => {
       loggedUser.token,
       author.id
     );
+     
+
+
+    if (post.likes + 1 === 30 && !post.inserted) {
+      const path = {
+        classInput: post.path.year,
+        fileUrl: post.url,
+        semestere: post.path.semester,
+        type: post.path.folder,
+        module: post.path.module,
+      };
+
+      const response = await postService.insertToDataBase(path);
+      const res = await postService.updatePost({
+        ...data,
+        inserted: true,
+      });
+    }
   };
 
   const handleDownClick = async () => {
@@ -95,7 +113,7 @@ const Post = ({ post, author }) => {
 
     const { data } = await postService.updatePost(updatedPost);
 
-    const  res  = await userServices.updateUser({
+    const res = await userServices.updateUser({
       ...author,
       points: author.points - 3,
     });
@@ -110,7 +128,7 @@ const Post = ({ post, author }) => {
       };
 
       setCurrUser(updatedUser);
-      const  response  = await userServices.updateUser(updatedUser);
+      const response = await userServices.updateUser(updatedUser);
       if (author.id !== currUser.id) {
         const { res } = await userServices.updateUser({
           ...author,
@@ -121,7 +139,7 @@ const Post = ({ post, author }) => {
         postId: post.id,
         text: `Your post <span className='b'>${post.title}</span> was bookmarked by another user!, you got <span className='b'>+10 XP</span> for that`,
       };
-      const  resp  = await userServices.addNotification(
+      const resp = await userServices.addNotification(
         notification,
         loggedUser.token,
         author.id

@@ -25,6 +25,7 @@ app.use(morgan("postFormat"));
 
 const userRouter = require("./controllers/user");
 const postRouter = require("./controllers/post");
+const adminRouter = require('./controllers/admin')
 
 logger.info("connecting to", config.MONGODB_URI);
 mongoose.set('strictQuery', false)
@@ -48,6 +49,7 @@ app.use(express.json());
 
 app.use("/api/user", userRouter);
 app.use("/api/post", postRouter);
+app.use("/api/admin", adminRouter);
 
 
 module.exports = app;

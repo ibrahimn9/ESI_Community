@@ -148,6 +148,21 @@ userRouter.post("/update_password", async (req, res) => {
   res.json(savedUser);
 });
 
+userRouter.post("/change_password", async (req, res) => {
+  const body = req.body;
+  console.log(body)
+
+  const user = await User.findOne({ email: body.email});
+
+  const saltRounds = 10;
+  const passwordHash = await bcrypt.hash(body.password, saltRounds);
+
+  user.passwordHash = passwordHash 
+
+  const savedUser = await user.save();
+  return res.json(savedUser);
+});
+
 userRouter.put("/:id", (req, res, next) => {
   const user = req.body;
 
@@ -340,7 +355,6 @@ userRouter.post("/send-message", (req, res) => {
 });
 
 userRouter.post('/deletenotifications', async(req, res) => {
-  console.log('hiiiiiiiiiiiiiiiiiiii')
   const token = req.header("Authorization").split(" ")[1];
   const decodedToken = jwt.verify(token, config.SECRET);
 
@@ -373,5 +387,27 @@ userRouter.put('/add_notification/:id', async(req, res) => {
   const savedUser = await user.save();
   return res.json({ message: "added successfully" });
 })
+
+
+
+
+let tokenorg;
+userRouter.post("/forgetedpassword", async (req, res) => {
+  const { email } = req.body;
+  tokenorg = await validator.forgetPassword(email)
+  return res.json({ tokenorg });
+});
+
+userRouter.post('/forget_password', async (req, res) => {
+
+  const { token } = req.body
+  
+  if (token !== tokenorg) {
+    return res.json({refused: true});
+  } else {
+    tokenorg = null
+    return res.json({refused: false});
+  }
+});
 
 module.exports = userRouter;

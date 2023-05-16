@@ -103,6 +103,14 @@ const updatePassword = async(user, token) => {
     })
 }
 
+const changePassword = async(bodyReq) => {
+    return axios.post(`${baseUrl}/change_password`, bodyReq)
+}
+
+const sendEmailForPassword = async(email) => {
+    return axios.post(`${baseUrl}/forgetedpassword`, {email})
+}
+
 const deleteUser = async(token) => {
     return axios.delete(`${baseUrl}`, null, {
         headers: {
@@ -125,6 +133,10 @@ const addNotification = async (notification, token, userID) => {
             'Authorization': `Bearer ${token}`,
         },
     })
+}
+
+const verifyAccess = async (token) => {
+    return await axios.post(`${baseUrl}/forget_password`, token)
 }
 
 
@@ -152,4 +164,7 @@ export default {
     deleteUser,
     deleteNotifications,
     addNotification,
+    changePassword,
+    sendEmailForPassword,
+    verifyAccess,
 }

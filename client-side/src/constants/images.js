@@ -20,6 +20,7 @@ import medBadge from "../assets/medBadge.svg"
 import lowBadge from "../assets/lowBadge.svg"
 import final from "../assets/bg5.svg"
 import star from "../assets/star.svg"
+import dash from "../assets/dash.svg"
 
 export default {
   facebook,
@@ -44,4 +45,5 @@ export default {
   lowBadge,
   final,
   star,
+  dash,
 };

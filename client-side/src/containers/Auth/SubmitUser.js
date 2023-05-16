@@ -7,6 +7,7 @@ import userServices from "../../services/userServices";
 import { useNavigate } from "react-router-dom";
 import { MdDone } from "react-icons/md";
 import { GoChevronDown } from "react-icons/go";
+import { BiLoaderAlt } from "react-icons/bi";
 
 const SubmitUser = () => {
   const [classOption, setClassOption] = useState({});
@@ -14,30 +15,29 @@ const SubmitUser = () => {
   const [msg, setMsg] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const newUser = useSelector((state) => state);
+  const [isLoading, setIsLoading] = useState(false);
+  const newUser = useSelector((state) => state.user);
+
+  console.log(newUser)
 
   const handleSubmit = (e) => {
     e.preventDefault();
   };
 
   const handleLogin = async (e) => {
+    setIsLoading(true);
     const { name, password, email } = newUser;
     file.append("class", classOption);
     file.append("name", name);
     file.append("password", password);
     file.append("email", email);
-    if (!classOption || !file) {
-      setMsg("Class or profile picture invalid");
-    } else {
       const { data } = await userServices.createNewUser(file);
       dispatch(createUser(data));
       const { id } = data;
-      const res = await userServices.login({ email, password })
-      if(res.data.token) {
-        window.localStorage.setItem("loggedUser", JSON.stringify(data))
-        navigate(`/user_home/${id}`)
-      }
-    }
+      const res = await userServices.login({ email, password });
+      if (data) setIsLoading(false);
+      window.localStorage.setItem("loggedUser", JSON.stringify(data));
+      navigate(`/user_home/${id}`);
   };
 
   const handleProfilePictureChange = (event) => {
@@ -153,12 +153,18 @@ const SubmitUser = () => {
             onChange={handleProfilePictureChange}
             accept="image/*"
           />
-          <button onClick={handleLogin} className="login-btn btn">
+          <button
+            onClick={handleLogin}
+            className="login-btn btn"
+            disabled={!file || !classOption}
+            style={{ display: "flex", alignItems: "center", justifyContent: 'center' }}
+          >
             Create account
+            {isLoading && <BiLoaderAlt className="loading" />}
           </button>
         </form>
       </Box>
-          {msg && <div className="auth-msg">{msg}</div>}
+      {msg && <div className="auth-msg">{msg}</div>}
     </Box>
   );
 };

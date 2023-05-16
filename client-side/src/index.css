@@ -787,6 +787,23 @@ a {
   animation: spin 1s ease-in-out infinite;
 }
 
+.delete-p {
+  background: var(--color-secondary);
+  color: white;
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-size: 18px;
+  transition: .2s;
+}
+
+.delete-p:hover {
+  opacity: .8;
+}
+
+.delete-u {
+  background: red;
+}
+
 @keyframes spin {
   from {
     transform: rotate(0deg);
@@ -795,6 +812,8 @@ a {
     transform: rotate(360deg);
   }
 }
+
+
 
 /*--------------extra small----------------*/
 @media screen and (max-width: 600px) {

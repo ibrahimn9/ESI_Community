@@ -2,8 +2,11 @@ import { Box, Stack } from "@mui/material";
 import { NavBar } from "../containers/UserHome";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+
 import postService from "../services/postService";
 import userServices from "../services/userServices";
+import adminServices from "../services/adminServices";
+
 import { BiCommentDetail } from "react-icons/bi";
 import { BsCaretDown, BsCaretUp, BsFileEarmarkTextFill } from "react-icons/bs";
 import { BsBookmark } from "react-icons/bs";
@@ -15,6 +18,8 @@ import { useRef } from "react";
 import Footer from "../containers/Home/Footer";
 import { Comment } from "../components";
 import { userBadge } from "../constants/userBadge";
+import ReportedPost from "./ReportedPost";
+import { MdOutlineReportProblem } from 'react-icons/md'
 
 const PostDetail = () => {
   const { id } = useParams();
@@ -28,6 +33,7 @@ const PostDetail = () => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [votedDown, setVotedDown] = useState(false);
   const [toggle, setToggle] = useState(false);
+  const [reportToggle, setReportToggle] = useState(false);
   const [comment, setComment] = useState();
   const [comments, setComments] = useState([]);
   const [mark, setMark] = useState(false);
@@ -35,7 +41,9 @@ const PostDetail = () => {
   const navigate = useNavigate();
   const commentsRef = useRef(null);
 
-  const daysAgo = Math.round((new Date() - new Date(post?.createdAt)) / (1000 * 60 * 60 * 24))
+  const daysAgo = Math.round(
+    (new Date() - new Date(post?.createdAt)) / (1000 * 60 * 60 * 24)
+  );
 
   const handleCommentButtonClick = () => {
     commentsRef.current.scrollIntoView({ behavior: "smooth" });
@@ -53,7 +61,7 @@ const PostDetail = () => {
     if (response.data?.bookmarks.includes(id)) {
       setMark(true);
     }
-    if (res.data?.folowing.includes(loggedUser.id)) {
+    if (res.data?.folowers.includes(loggedUser.id)) {
       setIsFollowing(true);
     }
 
@@ -91,12 +99,11 @@ const PostDetail = () => {
         postId: post?.id,
         text: `Your post <span className='b'>${post.title}</span> was bookmarked by another user!, you got <span className='b'>+10 XP</span> for that`,
       };
-      const  resp  = await userServices.addNotification(
+      const resp = await userServices.addNotification(
         notification,
         loggedUser.token,
         user.id
       );
-
     } else {
       setMark(false);
       const { data } = await userServices.sendUnmark(id, loggedUser.token);
@@ -119,10 +126,10 @@ const PostDetail = () => {
       up: post.up.concat(loggedUser.id),
       down: post.down.filter((u) => u !== loggedUser.id),
     });
-    const  res  = await userServices.updateUser({
+    const res = await userServices.updateUser({
       ...user,
-      points: user.points + 3, 
-    })
+      points: user.points + 3,
+    });
 
     const notification = {
       postId: post?.id,
@@ -148,8 +155,8 @@ const PostDetail = () => {
 
     const { res } = await userServices.updateUser({
       ...user,
-      points: user.points - 3, 
-    })
+      points: user.points - 3,
+    });
   };
 
   const handleProfileClick = () => {
@@ -190,14 +197,17 @@ const PostDetail = () => {
     });
     const { res } = await userServices.updateUser({
       ...user,
-      points: user.points + 1, 
-    })
+      points: user.points + 1,
+    });
     const { response } = await userServices.updateUser({
       ...currUser,
-      points: currUser.points + 1, 
-    })
-    
+      points: currUser.points + 1,
+    });
   };
+
+  const handleReport = async () => {
+    const { data } = await adminServices.sendReported({ post }, loggedUser.token);
+  }
 
   return (
     <Box sx={{ background: "#EDF1F2", height: "auto" }}>
@@ -261,8 +271,31 @@ const PostDetail = () => {
             >
               <BsBookmark style={{ fontSize: "24px" }} />
             </button>
-            <button className="inter-btn">
+            <button
+              className="inter-btn"
+              style={{ position: "relative" }}
+              onClick={() => setReportToggle(!reportToggle)}
+            >
               <FiMoreHorizontal />
+              {reportToggle && <Box
+                sx={{
+                  top: '100%',
+                  width: "200px",
+                  height: "50px",
+                  background: "white",
+                  boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
+                  borderRadius: '5px',
+                  position: "absolute",
+                  display: 'flex',
+                  alignItems: 'center',
+                  px: 4,
+                  zIndex: '1000',
+                }}
+                onClick={handleReport}
+                >
+                  <MdOutlineReportProblem />
+                  <h3 className="tags">Report</h3>
+                </Box>}
             </button>
           </Stack>
         </Box>
