@@ -27,6 +27,7 @@ const Post = ({ post, author }) => {
   );
 
   const loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"));
+  console.log(loggedUser)
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -130,7 +131,7 @@ const Post = ({ post, author }) => {
       setCurrUser(updatedUser);
       const response = await userServices.updateUser(updatedUser);
       if (author.id !== currUser.id) {
-        const { res } = await userServices.updateUser({
+        const  res  = await userServices.updateUser({
           ...author,
           points: author.points + 10,
         });

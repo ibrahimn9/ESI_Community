@@ -111,8 +111,8 @@ const sendEmailForPassword = async(email) => {
     return axios.post(`${baseUrl}/forgetedpassword`, {email})
 }
 
-const deleteUser = async(token) => {
-    return axios.delete(`${baseUrl}`, null, {
+const deleteUser = async(token, id) => {
+    return axios.delete(`${baseUrl}/${id}`, null, {
         headers: {
             'Authorization': `Bearer ${token}`,
         },

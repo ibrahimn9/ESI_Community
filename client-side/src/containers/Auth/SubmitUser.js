@@ -18,7 +18,8 @@ const SubmitUser = () => {
   const [isLoading, setIsLoading] = useState(false);
   const newUser = useSelector((state) => state.user);
 
-  console.log(newUser)
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -27,7 +28,7 @@ const SubmitUser = () => {
   const handleLogin = async (e) => {
     setIsLoading(true);
     const { name, password, email } = newUser;
-    file.append("class", classOption);
+    file.append("class", JSON.stringify(classOption));
     file.append("name", name);
     file.append("password", password);
     file.append("email", email);
@@ -36,7 +37,7 @@ const SubmitUser = () => {
       const { id } = data;
       const res = await userServices.login({ email, password });
       if (data) setIsLoading(false);
-      window.localStorage.setItem("loggedUser", JSON.stringify(data));
+      window.localStorage.setItem("loggedUser", JSON.stringify(res.data));
       navigate(`/user_home/${id}`);
   };
 

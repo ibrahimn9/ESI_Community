@@ -10,7 +10,7 @@ const verifyEmail = async (email) => {
   const isEmailSchoolDomin = domain === "esi-sba.dz";
   const userEmail = await User.findOne({ email });
   const IsExist = userEmail ? true : false;
-  return { valid: isValid && isEmailSchoolDomin   , exist: IsExist };
+  return { valid: isValid    , exist: IsExist };
 };
 
 

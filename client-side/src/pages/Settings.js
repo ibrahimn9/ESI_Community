@@ -8,6 +8,7 @@ import userServices from "../services/userServices";
 import { images } from "../constants";
 import { ChromePicker } from "react-color";
 import createValidationMessage from "../constants/createValidationMessage";
+import { BiLoaderAlt } from "react-icons/bi";
 
 import { Footer } from "../containers/Home";
 import { useRef } from "react";
@@ -16,6 +17,9 @@ const Settings = () => {
   const loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"));
   const navigate = useNavigate();
   const [user, setUser] = useState({});
+  const [isLoadingA, setIsLoadingA] = useState(false);
+  const [isLoadingB, setIsLoadingB] = useState(false);
+  const [isLoadingC, setIsLoadingC] = useState(false);
   const [toggle, setToggle] = useState(false);
   const colorRef = useRef(null);
 
@@ -44,11 +48,13 @@ const Settings = () => {
   const [isPasswordValid, setIsPasswordValid] = useState(false);
 
   const handleProfileChanges = async () => {
+    setIsLoadingA(true);
     if (file) {
       file.append("name", name);
       file.append("bio", bio);
       file.append("brandColor", selectedColor);
       const { data } = await userServices.updateProfile(file, loggedUser.token);
+      if (data) setIsLoadingA(false);
     } else {
       const { data } = await userServices.updateProfile(
         {
@@ -58,6 +64,7 @@ const Settings = () => {
         },
         loggedUser.token
       );
+      if (data) setIsLoadingA(false);
     }
   };
 
@@ -81,21 +88,31 @@ const Settings = () => {
   };
 
   const handlePasswordUpdate = async () => {
+    setIsLoadingB(true);
     setError("");
     const res = await userServices.updatePassword(
       { password, currPassword },
       loggedUser.token
     );
+    if (res.data) setIsLoadingB(false);
     if (res.data.error) {
       setError(res.data.error);
     }
   };
 
   const handleDelete = async () => {
-    const { data } = await userServices.deleteUser(loggedUser.token);
-    window.localStorage.clear();
-    navigate("/auth/login");
+    const result = window.confirm(
+      "Are you sure you want to delete your account ?"
+    );
+    if (result) {
+      setIsLoadingC(true);
+      const { data } = await userServices.deleteUser(loggedUser.token, loggedUser.id);
+      if (data) setIsLoadingC(false);
+      window.localStorage.clear();
+      navigate("/auth/login");
+    }
   };
+  console.log(loggedUser.token)
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
@@ -109,7 +126,7 @@ const Settings = () => {
     setUser(data);
     setBio(data.bio);
     setName(data.name);
-    setSelectedColor(data.brandColor || '#000000');
+    setSelectedColor(data.brandColor || "#000000");
   };
 
   useEffect(() => {
@@ -224,10 +241,16 @@ const Settings = () => {
           </Box>
           <button
             className="btn post-btn"
-            style={{ margin: 0 }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              margin: 0,
+            }}
             onClick={handleProfileChanges}
           >
             Save changes
+            {isLoadingA && <BiLoaderAlt className="loading" />}
           </button>
         </Box>
         <Box
@@ -276,11 +299,17 @@ const Settings = () => {
             </Box>
             <button
               className="btn post-btn"
-              style={{ margin: 0 }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: 0,
+              }}
               disabled={!isPasswordValid || !currPassword}
               onClick={handlePasswordUpdate}
             >
               Set new password
+              {isLoadingB && <BiLoaderAlt className="loading" />}
             </button>
           </form>
         </Box>
@@ -312,10 +341,18 @@ const Settings = () => {
           </span>
           <button
             className="btn post-btn"
-            style={{ margin: 0, background: "#dc2626", marginTop: "20px" }}
+            style={{
+              margin: 0,
+              background: "#dc2626",
+              marginTop: "20px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
             onClick={handleDelete}
           >
             Delete Account
+            {isLoadingC && <BiLoaderAlt className="loading" />}
           </button>
         </Box>
       </Box>

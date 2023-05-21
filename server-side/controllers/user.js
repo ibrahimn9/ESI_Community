@@ -30,20 +30,15 @@ userRouter.get("/:id", (req, res, next) => {
     .catch((error) => next(error));
 });
 
-userRouter.delete("/:id", (req, res, next) => {
+userRouter.delete("/:id", async(req, res, next) => {
 
-  const token = req.header("Authorization").split(" ")[1];
-
-  const decodedToken = jwt.verify(token, config.SECRET);
-  if (!decodedToken) {
-    return res.status(400);
-  }
-
-  Person.findByIdAndRemove(decodedToken.id)
-    .then((result) => {
-      res.status(204).end();
-    })
-    .catch((error) => next(error));
+  const { id } = req.params;
+  const user = await User.findById(id);
+  const posts = user.posts;
+  posts.map(async(postId) => await Post.findByIdAndDelete(postId));
+  await User.findByIdAndRemove(id);
+  res.status(204).json("deleted");
+   
 });
 
 userRouter.post("/", multerService.upload.single("file"), async (req, res) => {
@@ -72,7 +67,7 @@ userRouter.post("/", multerService.upload.single("file"), async (req, res) => {
     name: body.name,
     email: body.email,
     passwordHash,
-    class: body.class,
+    class: JSON.parse(body.class),
     pic,
   });
 

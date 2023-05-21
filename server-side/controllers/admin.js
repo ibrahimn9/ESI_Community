@@ -51,7 +51,6 @@ adminRouter.post('/addToPostsForCheck',async (req,res) => {
 
 adminRouter.post('/deletePost',async (req,res) =>{
     const { id } = req.body;
-    console.log(id)
     const admin = await Admin.findOne({});
     admin.postsForCheck = admin.postsForCheck.filter((elm) => elm.id !== id );
     await admin.save();
@@ -75,9 +74,7 @@ adminRouter.post('/deleteAccount',async (req,res) => {
     return res.json({message : "there is no user"})
   }
   const posts =  user.posts;
-  for( i=0;i< posts.length; i++){
-    const deleted = await Post.findByIdAndDelete(posts[i]);
-  }
+  posts.map(async(postId) => await Post.findByIdAndDelete(postId));
   admin.blackList =  admin.blackList.concat(email);
   await User.findByIdAndRemove(id);
   await admin.save();
