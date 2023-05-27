@@ -81,7 +81,7 @@ const CreatePost = () => {
     file.append("fileSize", fileSize);
     const { data } = await postService.createPost(file, token);
     if (data) setIsLoading(false);
-    const { res } = await userServices.updateUser({
+    const  res  = await userServices.updateUser({
       ...user,
       points: user.points + 5,
     });
@@ -95,7 +95,7 @@ const CreatePost = () => {
             <p>Best regards,</p>
             <p>ESI Community</p>`,
     };
-    const { response } = await userServices.sendMessage(message, emails);
+    const  response  = await userServices.sendMessage(message, emails);
 
     navigate(`/post_detail/${data.id}`);
   };

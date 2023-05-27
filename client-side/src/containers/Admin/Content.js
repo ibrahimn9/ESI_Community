@@ -33,6 +33,7 @@ const Content = () => {
             mt: 2,
             cursor: 'pointer',
           }}
+          onClick={() => navigate('/admin/dashboard')}
         >
           <h2
             style={{ color: "#04396A", fontSize: "32px", textAlign: "center" }}
@@ -48,7 +49,7 @@ const Content = () => {
             borderRadius: "20px",
             boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
             background: "#C1D0E6",
-            backgroundImage: `url(${images.lamp})`,
+            backgroundImage: `url(${images.gennotification})`,
             backgroundSize: "100%",
             backgroundPosition: "0 100%",
             backgroundRepeat: "no-repeat",
@@ -74,8 +75,8 @@ const Content = () => {
             height: "400px",
             borderRadius: "20px",
             boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
-            background: "#C1D0E6",
-            backgroundImage: `url(${images.lamp})`,
+            background: "#ECE6D8",
+            backgroundImage: `url(${images.postlist})`,
             backgroundSize: "100%",
             backgroundPosition: "0 100%",
             backgroundRepeat: "no-repeat",
@@ -101,8 +102,8 @@ const Content = () => {
             height: "400px",
             borderRadius: "20px",
             boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
-            background: "#C1D0E6",
-            backgroundImage: `url(${images.lamp})`,
+            background: "#ECE6D8",
+            backgroundImage: `url(${images.postlist})`,
             backgroundSize: "100%",
             backgroundPosition: "0 100%",
             backgroundRepeat: "no-repeat",
@@ -128,8 +129,8 @@ const Content = () => {
             height: "400px",
             borderRadius: "20px",
             boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
-            background: "#C1D0E6",
-            backgroundImage: `url(${images.lamp})`,
+            background: "#ECE6D8",
+            backgroundImage: `url(${images.userlist})`,
             backgroundSize: "100%",
             backgroundPosition: "0 100%",
             backgroundRepeat: "no-repeat",

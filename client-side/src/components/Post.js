@@ -27,7 +27,7 @@ const Post = ({ post, author }) => {
   );
 
   const loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"));
-  console.log(loggedUser)
+
 
   const navigate = useNavigate();
   const dispatch = useDispatch();

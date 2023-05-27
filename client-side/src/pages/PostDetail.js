@@ -48,14 +48,14 @@ const PostDetail = () => {
   const handleCommentButtonClick = () => {
     commentsRef.current.scrollIntoView({ behavior: "smooth" });
   };
-
+  console.log(post)
   const getPostAndUser = async () => {
     const { data } = await postService.getOne(id);
-    const res = await userServices.getOne(data.user);
-    const response = await userServices.getOne(loggedUser.id);
     setPost(data);
-    setComments(data.comments);
+    const res = await userServices.getOne(data.user);
     setUser(res.data);
+    const response = await userServices.getOne(loggedUser.id);
+    setComments(data.comments);
     setLikes(data.likes);
     setCurrUser(response.data);
     if (response.data?.bookmarks.includes(id)) {

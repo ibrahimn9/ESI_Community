@@ -18,6 +18,7 @@ import {
   AdminNotification,
   PostsList,
   UsersList,
+  Dashboard
 } from "./pages";
 import {
   Login,
@@ -51,7 +52,7 @@ const App = () => (
       <Route path="/admin/notification" element={<AdminNotification />}  />
       <Route path="/admin/posts" element={<PostsList />}  />
       <Route path="/admin/users" element={<UsersList />}  />
-
+      <Route path="/admin/dashboard" element={<Dashboard />}  /> 
     </Routes>
   </BrowserRouter>
 );

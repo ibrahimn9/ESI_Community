@@ -5,34 +5,32 @@ import user from "../services/userServices";
 
 import { NavBar, Header, Content, Source, Footer } from "../containers/Home";
 
-
 const Home = () => {
   const navigate = useNavigate();
 
-  
   const verifyToken = async () => {
-    const loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"))
-    if(loggedUser.email === 'esicommunity@gmail.com') {
-      navigate(`/admin/${loggedUser.id}`)
+    const loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"));
+    if (loggedUser.email === "esicommunity23@gmail.com") {
+      navigate(`/admin/${loggedUser.id}`);
+    } else {
+      const { data } = await user.sendToken(loggedUser.token);
+      const { id } = data;
+      navigate(`/user_home/${id}`);
     }
-    const { data } = await user.sendToken(loggedUser.token) 
-    const { id } = data
-    navigate(`/user_home/${id}`)
-  }
+  };
 
   useEffect(() => {
     if (window.localStorage.getItem("loggedUser")) {
-    verifyToken();
+      verifyToken();
     }
-  }, [])
-
+  }, []);
 
   return (
     <Box
       className="home"
       sx={{
         backgroundColor: "#FDFDFD",
-        height: 'auto',
+        height: "auto",
       }}
     >
       <NavBar />

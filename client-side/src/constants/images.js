@@ -21,6 +21,9 @@ import lowBadge from "../assets/lowBadge.svg"
 import final from "../assets/bg5.svg"
 import star from "../assets/star.svg"
 import dash from "../assets/dash.svg"
+import postlist from "../assets/bg12.svg"
+import userlist from "../assets/bg13.svg"
+import gennotification from "../assets/bg15.svg"
 
 export default {
   facebook,
@@ -46,4 +49,7 @@ export default {
   final,
   star,
   dash,
+  postlist,
+  userlist,
+  gennotification,
 };

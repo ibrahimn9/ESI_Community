@@ -21,7 +21,7 @@ const PostList = () => {
 
   useEffect(() => {
     getPosts();
-  }, []);
+  }, [posts]);
 
 
   return (
