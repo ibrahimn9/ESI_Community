@@ -5,7 +5,6 @@ import { TbGridDots } from "react-icons/tb";
 
 import { images } from "../../constants";
 
-
 const NavBar = () => {
   const [toggle, setToggle] = useState(false);
   return (
@@ -14,7 +13,7 @@ const NavBar = () => {
       alignItems="center"
       px={{ xs: 4, lg: 15 }}
       py={2}
-      sx={{ top: '0', justifyContent:"space-between"}}
+      sx={{ top: "0", justifyContent: "space-between" }}
     >
       <Link to="/" style={{ display: "flex", alignItems: "center" }}>
         <img src={images.logo} alt="logo" height={55} />
@@ -22,7 +21,16 @@ const NavBar = () => {
       <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" }, ml: 10 }}>
         {["product", "content", "about", "support", "contact", "source"].map(
           (item) => (
-            <a key={item} href={`${item}`} className="home_navbar-link">
+            <a
+              key={item}
+              href={
+                item === "source"
+                  ? "https://github.com/ibrahimn9/ESI_Community"
+                  : `${item}`
+              }
+              target={item !== "source" || "_blank"}
+              className="home_navbar-link"
+            >
               {item}
             </a>
           )
@@ -37,9 +45,13 @@ const NavBar = () => {
           <Box className="home_navbar-links--toggled">
             {["security", "content", "about", "docs", "contact", "source"].map(
               (item) => (
-                <a key={item} href={`${item}`} className="home_navbar-link link--toggled">
+                <a
+                  key={item}
+                  href={`${item}`}
+                  className="home_navbar-link link--toggled"
+                >
                   {item}
-                </a>  
+                </a>
               )
             )}
           </Box>

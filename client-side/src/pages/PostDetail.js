@@ -48,7 +48,7 @@ const PostDetail = () => {
   const handleCommentButtonClick = () => {
     commentsRef.current.scrollIntoView({ behavior: "smooth" });
   };
-  console.log(post)
+
   const getPostAndUser = async () => {
     const { data } = await postService.getOne(id);
     setPost(data);

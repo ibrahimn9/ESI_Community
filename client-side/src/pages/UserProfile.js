@@ -37,6 +37,7 @@ const UserProfile = () => {
       setIsFollowing(true);
     }
   };
+  console.log(user)
 
   const getUsers = async () => {
     const { data } = await userServices.getAll();
@@ -273,10 +274,11 @@ const UserProfile = () => {
                 <Post key={`${post.id}`} post={post} author={user} />
               ))}
           {!selectPost &&
-            user?.bookmarks.map((postId) => {
+            user
+              ?.bookmarks.map((postId) => { 
               const post = posts?.find((p) => p.id === postId);
-              const author = users?.find((u) => u.id === post.user);
-              return <Post key={`${postId}`} post={post} author={author} />;
+              const author = users?.find((u) => u.id === post?.user);
+              if(post && author) return <Post key={`${postId}`} post={post} author={author} />;     
             })}
         </Box>
       </Box>

@@ -18,6 +18,8 @@ const Dashboard = () => {
   const [drive1Storage, setDrive1Storage] = useState(0);
   const [drive2Storage, setDrive2Storage] = useState(0);
 
+  
+
   const fetchData = async () => {
     const posts = await postService.getAll();
     setPostsNum(posts?.length);
@@ -65,10 +67,13 @@ const Dashboard = () => {
     let storage1 = posts
       .map((p) => p.fileSize)
       .reduce((sum, fileSize) => sum + fileSize, 0);
+
+
     let storage2 = posts
       .filter((p) => p.inserted)
       .map((p) => p.fileSize)
       .reduce((sum, fileSize) => sum + fileSize, 0);
+
     let totalDrive = 16106127360;
     storage1 = (storage1 * 100) / totalDrive;
     storage2 = (storage2 * 100) / totalDrive;

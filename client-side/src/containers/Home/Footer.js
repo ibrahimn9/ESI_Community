@@ -20,11 +20,17 @@ const Footer = () => (
             display: "flex",
             alignItems: "center",
             margin: 0,
-            color: "#3C87F0",
+            color: "c",
             cursor: "pointer",
           }}
         >
-          Visit our source code{" "}
+          <a
+            href="https://github.com/ibrahimn9/ESI_Community"
+            target="_blank"
+            style={{ color: "#3C87F0" }}
+          >
+            Visit our source code{" "}
+          </a>
           <BsArrowRight
             style={{ color: "#3C87F0", fontSize: "28px", marginLeft: "10px" }}
           />

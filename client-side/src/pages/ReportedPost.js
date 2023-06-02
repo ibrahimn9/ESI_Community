@@ -20,7 +20,7 @@ const ReportedPost = () => {
 
   useEffect(() => {
     getPosts();
-  }, [posts]);
+  }, []);
 
 
   return (

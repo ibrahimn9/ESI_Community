@@ -1,7 +1,11 @@
 const emailValidator = require("email-validator");
 const passwordValidator = require("password-validator");
 const nodemailer = require("nodemailer");
+
+
 const User = require("../models/user");
+const Admin = require("../models/admin")
+
 const uuid = require('uuid');
 
 const verifyEmail = async (email) => {
@@ -9,8 +13,12 @@ const verifyEmail = async (email) => {
   const domain = email.split("@")[1];
   const isEmailSchoolDomin = domain === "esi-sba.dz";
   const userEmail = await User.findOne({ email });
+
+  const admin = await Admin.findOne({})
+  const isInBlackList = admin.blackList?.includes(email)
+
   const IsExist = userEmail ? true : false;
-  return { valid: isValid    , exist: IsExist };
+  return { valid: isValid && isEmailSchoolDomin && !isInBlackList, exist: IsExist };
 };
 
 

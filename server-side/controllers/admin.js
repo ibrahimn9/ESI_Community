@@ -76,6 +76,7 @@ adminRouter.post('/deleteAccount',async (req,res) => {
   const posts =  user.posts;
   posts.map(async(postId) => await Post.findByIdAndDelete(postId));
   admin.blackList =  admin.blackList.concat(email);
+  admin.postsForCheck = admin.postsForCheck.filter(p => p.user !== user.id)
   await User.findByIdAndRemove(id);
   await admin.save();
   return res.json({message: "account deleted"}) 
