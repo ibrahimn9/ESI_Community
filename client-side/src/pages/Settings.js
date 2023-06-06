@@ -112,7 +112,7 @@ const Settings = () => {
       navigate("/auth/login");
     }
   };
-  console.log(loggedUser.token)
+  
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];

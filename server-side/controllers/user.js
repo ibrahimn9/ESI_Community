@@ -34,8 +34,9 @@ userRouter.delete("/:id", async(req, res, next) => {
 
   const { id } = req.params;
   const user = await User.findById(id);
-  const posts = user.posts;
-  posts.map(async(postId) => await Post.findByIdAndDelete(postId));
+  const posts = await Post.find({});
+  posts = posts.filter(p => p.user !== user.id)
+  await posts.save()
   await User.findByIdAndRemove(id);
   res.status(204).json("deleted");
    
@@ -145,9 +146,9 @@ userRouter.post("/update_password", async (req, res) => {
 
 userRouter.post("/change_password", async (req, res) => {
   const body = req.body;
-  console.log(body)
 
-  const user = await User.findOne({ email: body.email});
+
+  const user = await User.findOne({ email: emailReq});
 
   const saltRounds = 10;
   const passwordHash = await bcrypt.hash(body.password, saltRounds);
@@ -387,8 +388,11 @@ userRouter.put('/add_notification/:id', async(req, res) => {
 
 
 let tokenorg;
+let emailReq;
 userRouter.post("/forgetedpassword", async (req, res) => {
   const { email } = req.body;
+  emailReq = email
+  console.log(emailReq)
   tokenorg = await validator.forgetPassword(email)
   return res.json({ tokenorg });
 });

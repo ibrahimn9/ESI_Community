@@ -526,9 +526,7 @@ const PostDetail = () => {
             </button>
           )}
           <p style={{ textAlign: "center" }}>
-            Hi, I'm Ibra! I'm a front-end developer and student at computer
-            science school ESI ex INI, and the main languages in my tech stack
-            are JavaScript, React, and HTML/CSS. I’m a lifelong learner.
+            {user?.bio}
           </p>
           <Stack
             direction="row"
@@ -545,10 +543,6 @@ const PostDetail = () => {
             <Box sx={{ mr: 2 }}>
               <span>{user?.folowers.length}</span>
               <span className="tags">followers</span>
-            </Box>
-            <Box sx={{ mr: 2 }}>
-              <span>{user?.posts.length}</span>
-              <span className="tags">posts published</span>
             </Box>
             <Box sx={{ mr: 2 }}>
               <span>{user?.points}</span>

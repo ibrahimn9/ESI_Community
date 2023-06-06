@@ -18,9 +18,13 @@ const ForgetPasword = () => {
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const { email } = useSelector((state) => state.user)
 
+  const state = useSelector( state => state)
+
   const handleSubmit = (e) => {
     e.preventDefault();
   };
+
+  
 
   const handlePasswordUpdate = async () => {
     setError("");

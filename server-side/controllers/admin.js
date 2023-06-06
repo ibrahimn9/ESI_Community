@@ -51,9 +51,14 @@ adminRouter.post('/addToPostsForCheck',async (req,res) => {
 
 adminRouter.post('/deletePost',async (req,res) =>{
     const { id } = req.body;
+    const post = await Post.findById(id)
+    const user = await User.findById(post.user)
+    console.log(user.posts.filter(postId => postId !== id))
+    user.posts = user.posts.filter(postId => postId !== id)
     const admin = await Admin.findOne({});
     admin.postsForCheck = admin.postsForCheck.filter((elm) => elm.id !== id );
     await admin.save();
+    await user.save();
     const postmodified = await Post.findByIdAndDelete(id);
     return res.json({message: "post deleted succeffuly"});
 })

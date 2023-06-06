@@ -22,6 +22,7 @@ const UserProfile = () => {
   const [user, setUser] = useState();
   const [isFollowing, setIsFollowing] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [postsLength, setPostsLength] = useState(0)
   const [users, setUsers] = useState([]);
   const [selectPost, setSelectPost] = useState(true);
   const { id } = useParams();
@@ -37,7 +38,7 @@ const UserProfile = () => {
       setIsFollowing(true);
     }
   };
-  console.log(user)
+
 
   const getUsers = async () => {
     const { data } = await userServices.getAll();
@@ -231,7 +232,7 @@ const UserProfile = () => {
               <span className="tags">followers</span>
             </Box>
             <Box sx={{ mr: 2 }}>
-              <span>{user?.posts.length}</span>
+              <span>{posts.filter(p => p.user === user?.id).reduce((sum, p) => sum + 1, 0)}</span>
               <span className="tags">posts published</span>
             </Box>
             <Box sx={{ mr: 2 }}>

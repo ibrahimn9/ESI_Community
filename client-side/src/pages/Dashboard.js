@@ -77,8 +77,8 @@ const Dashboard = () => {
     let totalDrive = 16106127360;
     storage1 = (storage1 * 100) / totalDrive;
     storage2 = (storage2 * 100) / totalDrive;
-    setDrive1Storage(storage1.toFixed(1));
-    setDrive2Storage(storage2.toFixed(1));
+    setDrive2Storage(storage2.toFixed(2));
+    setDrive1Storage(storage1.toFixed(2));
   };
 
   useEffect(() => {

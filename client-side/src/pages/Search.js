@@ -18,6 +18,8 @@ const Search = () => {
   const [users, setUsers] = useState([]);
   const [filteredPosts, setFiltredPosts] = useState([]);
 
+
+
   const getPosts = async () => {
     const posts = await postService.getAll();
     const filteredPosts = posts.filter((p) =>

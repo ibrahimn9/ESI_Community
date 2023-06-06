@@ -36,6 +36,7 @@ postRouter.post("/", multerService.upload.single("file"), async (req, res) => {
   const { title, description, year, speciality, semester, module, folder, fileSize } = req.body;
   const tags = JSON.parse(req.body.tags)
   const token = req.header("Authorization").split(" ")[1];
+
   try {
     if (!file) {
       return res.status(400).send("No file received.");
@@ -72,8 +73,10 @@ postRouter.post("/", multerService.upload.single("file"), async (req, res) => {
       },
       fileSize,
     });
+
     const savedPost = await post.save();
-    user.posts = user.posts.concat(savedPost._id.toString());
+    let postId = savedPost._id.toString()
+    user.posts = user.posts.concat(postId)
     const savedUser = await user.save();
     return res.status(201).send(savedPost);
   } catch (error) {

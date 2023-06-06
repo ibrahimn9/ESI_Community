@@ -15,6 +15,9 @@ const EmailForPassword = () => {
   const navigate = useNavigate();
   const [toggle, setToggle] = useState(false);
 
+  const state = useSelector( state => state)
+
+
   const handleEmailChange = async (event) => {
     const email = event.target.value;
     setEmail(email);

@@ -64,7 +64,7 @@ const CreatePost = () => {
     const formData = new FormData();
     formData.append("file", file);
     setFile(formData);
-    setFileSize(file.size)
+    setFileSize(file.size);
   };
 
   const handlePublish = async () => {
@@ -81,7 +81,7 @@ const CreatePost = () => {
     file.append("fileSize", fileSize);
     const { data } = await postService.createPost(file, token);
     if (data) setIsLoading(false);
-    const  res  = await userServices.updateUser({
+    const res = await userServices.updateUser({
       ...user,
       points: user.points + 5,
     });
@@ -90,12 +90,12 @@ const CreatePost = () => {
       text: `<p>Hi</p>
             <p>Just wanted to let you know that ${user?.name.toUpperCase()}, who you follow on our platform,
             has posted a new document titled <b>"${title}"</b>.
-            Check it out here [Link] and feel free to leave a comment if you have any feedback.</p>
+            ,feel free to leave a comment if you have any feedback.</p>
             <p>Thanks for being a part of our community. Let us know if you have any questions.</p>
             <p>Best regards,</p>
             <p>ESI Community</p>`,
     };
-    const  response  = await userServices.sendMessage(message, emails);
+    const response = await userServices.sendMessage(message, emails);
 
     navigate(`/post_detail/${data.id}`);
   };
@@ -263,6 +263,22 @@ const CreatePost = () => {
                       ))}
                     </select>
                   )}
+                  {speciality &&
+                    semester &&
+                    module && (
+                      <select
+                        value={folder}
+                        onChange={(e) => setFolder(e.target.value)}
+                        className="select-input"
+                      >
+                        <option value="">Select Folder</option>
+                        {folders.map((f) => (
+                          <option value={f} key={f}>
+                            {f}
+                          </option>
+                        ))}
+                      </select>
+                    )}
                 </Box>
               )
             )}
